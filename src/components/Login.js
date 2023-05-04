@@ -30,16 +30,20 @@ function Login() {
 }
 
 
-  const generate_token=(length)=>{
-    //edit the token allowed characters
-    var a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".split("");
-    var b = [];  
-    for (var i=0; i<length; i++) {
-        var j = (Math.random() * (a.length-1)).toFixed(0);
-        b[i] = a[j];
-    }
-    return b.join("");
-}
+//   const generate_token=(length)=>{
+//     //edit the token allowed characters
+//     var a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".split("");
+//     var b = [];  
+//     for (var i=0; i<length; i++) {
+//         var j = (Math.random() * (a.length-1)).toFixed(0);
+//         b[i] = a[j];
+//     }
+//     input['token'] = b.join("")
+   
+  
+//     //return b.join("");
+   
+// }
 
   const handleLogin = (e) =>{
   
@@ -63,14 +67,25 @@ function Login() {
                 break;
 
             }else{
-                alert("Please type your email address and password correctly")
+                alert("Please enter valid email and password")
             }
         }
         if (flag === true) {
-        
-            localStorage.setItem("token",generate_token(32))
 
-            navigate('/ViewData')
+          let result = '';
+          const str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+          const charLength = str.length;
+          let counter = 0;
+          while (counter < 33) {
+              result += str.charAt(Math.floor(Math.random() * charLength));
+              counter += 1;
+          }
+          input['token'] = result;
+          localStorage.setItem('LoggedIn User', JSON.stringify(input))
+          navigate('/ViewData')
+          //  generate_token(32);
+           // localStorage.setItem('LoggedIn user', JSON.stringify(input))
+         
         }
     }
     //eslint-disable-next-line

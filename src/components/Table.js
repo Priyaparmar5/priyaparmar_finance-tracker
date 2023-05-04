@@ -26,13 +26,10 @@ function Table(props) {
   const [groupData, setGroupData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage, setPostPerPage] = useState(3);
-  const [filterdata, setFilterdata] = useState([]);
-  const [query, setQuery] = useState("");
   const recordsPerPage = 3;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const [editMode, setEditMode] = useState(false); // state for edit mode
-  const [editIndex, setEditIndex] = useState(null);
+
 
   const records = [...myLocalStorageData].slice(firstIndex, lastIndex);
   //const groupData = [...groupData].slice(firstIndex, lastIndex);
@@ -81,10 +78,13 @@ function Table(props) {
   //     //setOrder("DSC");
   //   }
   // };
+
+  
   const sorting = (col) => {
+     setCurrentPage(1);
     if(order === "normal"){
       setMyLocalStorageData(tabledData)
-      setOrder("normal")
+      setOrder(tabledData)
     }
     else if (col === "monthYear") {
       let datanew = [...myLocalStorageData]
@@ -120,6 +120,7 @@ function Table(props) {
     }
   };
 
+
   
   return (
     <div>
@@ -127,7 +128,7 @@ function Table(props) {
         setMyLocalStorageData={setMyLocalStorageData}
         tabledData={tabledData}
       />
-      {/* <input type="button" className="add-btn" value="add transaction" to={'/add'} /> */}
+    
 
       <Link to={'/add'} className="add-btn" >Add transaction</Link>
       {/* <button type="button" className="backbtn" onClick={() => navigate(-1)}>
@@ -138,7 +139,7 @@ function Table(props) {
       <div className="TableDesign">
         <table className="table">
           <tr>
-            <th>id</th>
+            {/* <th>id</th> */}
             <th onClick={() => sorting("transactionDate")}>Transaction Date</th>
             <th onClick={() => sorting("monthYear")}>Month Year</th>
             <th onClick={() => sorting("transactionType")}>Transaction Type</th>
@@ -152,9 +153,9 @@ function Table(props) {
             <th>Delete</th>
           </tr>
 
-          {records.map((item, id) => (
-            <tr key={id}>
-              <td>{item.id}</td>
+          {records.map((item, index) => (
+            <tr key={index}>
+              {/* <td>{item.id}</td> */}
               <td>{item.transactionDate}</td>
               <td>{item.monthYear}</td>
               <td>{item.transactionType}</td>
@@ -173,8 +174,8 @@ function Table(props) {
               <td>
                 {" "}
                 <Link
-                  to="/transaction/viewDetail"
-                  state={item}
+                  to={`/transaction/viewDetail/${item.id}`}
+                  //state={item}
                   className="post"
                 >
                   {" "}
@@ -188,7 +189,7 @@ function Table(props) {
                 </Link>
               </td>
               <td>
-                <DeleteIcon onClick={() => handleDelete(id)}></DeleteIcon>
+                <DeleteIcon onClick={() => handleDelete(index)}></DeleteIcon>
               </td>
             </tr>
           ))}

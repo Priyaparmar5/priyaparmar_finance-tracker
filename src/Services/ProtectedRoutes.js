@@ -26,8 +26,8 @@ const ProtectedRoutes = () => {
                       <Route path='/add/:id' element={<TransactionForm />}/>
                       <Route path="/search" element={<Search />}/>
                       <Route path="/ViewData" element={<ViewData />}/>
-                      <Route path="/transaction/viewDetail" element={<ViewDetail />}/>
-                      <Route path="/page?" element={<Pagination />}/>
+                      <Route path="/transaction/viewDetail/:id" element={<ViewDetail />}/>
+                    
                       <Route path="/*" element={<Navigate to="/ViewData" replace />} />
                  </Routes>
              )}

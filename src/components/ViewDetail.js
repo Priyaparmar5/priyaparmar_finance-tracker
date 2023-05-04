@@ -1,24 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
-import { Link, Outlet,useNavigate,useLocation } from "react-router-dom";
+import { Link, Outlet,useNavigate,useLocation,useParams } from "react-router-dom";
 
 function ViewDetail() {
-  const [state, setState] = useState({
-    transactionDate: "",
-    monthYear: "",
-    transactionType: "",
-    fromAccount: "",
-    toAccount: "",
-    amount: "",
-    receipt: "",
-    notes: "",
-  });
 
+  const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  const data = location.state;
-
-  const [myLocalStorageData, setMyLocalStorageData] = useState([])
+ // const data = location.state;
+  const [data , setdata] = useState([])
  
     // useEffect(()=> {
      
@@ -28,8 +18,19 @@ function ViewDetail() {
     //   setMyLocalStorageData(data)
      
     // },[])
-  
+    const retrivedata = JSON.parse(localStorage.getItem('key'))
+    useEffect(() => {
+      for (const key in retrivedata) {
 
+          if (parseInt(retrivedata[key].id) === parseInt(id)) {
+              setdata(retrivedata[key])
+              console.log(retrivedata[key],"key");
+              break;
+          }
+      }
+      
+      //eslint-disable-next-line
+  }, [])
   return (
     <>
      <button type="button" className="backbtn" onClick={() => navigate(-1)}>Go back</button>

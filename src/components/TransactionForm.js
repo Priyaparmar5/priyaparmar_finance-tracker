@@ -1,5 +1,5 @@
 import "../App.css";
-import { useState, useEffect ,React} from "react";
+import { useState, useEffect, React } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 
 function TransactionForm() {
@@ -17,6 +17,31 @@ function TransactionForm() {
     { value: "Nov 2023", label: "Nov 2023" },
     { value: "Dec 2023", label: "Dec 2023" },
   ];
+
+  const fromAccountList = [
+    { value: "Personal Expense", label: "Personal Expense" },
+    { value: "Real Living", label: "Real Living" },
+    { value: "My Dream Home", label: "My Dream Home" },
+    { value: "Full circle", label: "Full circle" },
+    { value: "Core Realtors", label: "Core Realtors" },
+    { value: "Big Block", label: "Big Block" },
+  ];
+
+  const toAccountList = [
+    { value: "Personal Expense", label: "Personal Expense" },
+    { value: "Real Living", label: "Real Living" },
+    { value: "My Dream Home", label: "My Dream Home" },
+    { value: "Full circle", label: "Full circle" },
+    { value: "Core Realtors", label: "Core Realtors" },
+    { value: "Big Block", label: "Big Block" },
+  ];
+
+  const transactionTypeList = [
+    { value: "Home Expense", label: "Home Expense" },
+    { value: "Personal Expense", label: "Personal Expense" },
+    { value: "Income", label: "Income" },
+  ];
+
   const [formError, setFormError] = useState({});
   let date = new Date();
   let year = date.getFullYear();
@@ -26,16 +51,21 @@ function TransactionForm() {
     monthYear: {
       monthYearList,
     },
-    transactionType: "",
-    fromAccount: "",
-    toAccount: "",
+    transactionType: {
+      transactionTypeList,
+    },
+    fromAccount: {
+      fromAccountList,
+    },
+    toAccount: {
+      toAccountList,
+    },
     amount: "",
     receipt: "",
     notes: "",
   };
 
   //let fileInput =React.createRef();
-
 
   const [formData, setFormData] = useState(initialValues);
   const [isSubmit, setSubmit] = useState(false);
@@ -88,10 +118,7 @@ function TransactionForm() {
   };
 
   const handleRemove = () => {
-    const val = { ...formData, receipt: null };
-   //formData.receipt = "";
-    setFormData(val);
-    //fileInput.current.value = null
+    setFormData({ ...formData, receipt: "" });
   };
 
   const onChangeHandler = (event) => {
@@ -120,8 +147,17 @@ function TransactionForm() {
     }
   };
 
+  const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
   const navigate = useNavigate();
-  const validateForm = () => {
+
+  const validate = (event) => {
+    let err = {};
+    if (event.target.value === "") {
+      err = "select value";
+    }
+  };
+
+  const validateForm = (e) => {
     let err = {};
     const MIN_FILE_SIZE = 1024;
 
@@ -134,13 +170,14 @@ function TransactionForm() {
 
     // }
 
-    const fileSizeKiloBytes = formData.receipt.size / 1024;
-    console.log(formData.receipt.size, "sizeeeeee");
-    console.log(fileSizeKiloBytes, "filesizekb..");
+    // const fileSizeKiloBytes = formData.receipt.size / 1024;
+    //console.log(formData.receipt.size, "sizeeeeee");
+    //console.log(fileSizeKiloBytes, "filesizekb..");
 
-    if (formData.receipt.size > 1024) {
-      err.receipt = "size";
-    }
+    // if (formData.receipt.size > 1024) {
+    //   err.receipt = "size";
+    // }
+
     if (formData.receipt === "") {
       err.receipt = "receipt is required";
     } else if (formData.receipt.size > MIN_FILE_SIZE) {
@@ -194,6 +231,8 @@ function TransactionForm() {
     return Object.keys(err).length < 1;
   };
 
+  console.log(formData.transactionDate, "formdddddddddd");
+
   const { id } = useParams();
   console.log({ id }, "param");
   const handleSubmit = (e) => {
@@ -222,20 +261,17 @@ function TransactionForm() {
       console.log("hello");
       if (localStorage.getItem("key")) {
         const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
-        console.log("id", data.id);
+        console.log("id", id);
         if (id) {
           for (const e in retrivedata) {
             if (parseInt(retrivedata[e].id) === parseInt(id)) {
-              console.log(e.id, "hiiii");
               data["id"] = id;
               retrivedata[e] = data;
             }
           }
           console.log(retrivedata, "data");
           alert("update successfully");
-         
         } else {
-          
           const previd = retrivedata[retrivedata.length - 1].id;
           data["id"] = parseInt(previd) + 1;
           retrivedata.push(data);
@@ -249,14 +285,15 @@ function TransactionForm() {
       navigate("/viewData");
     }
   };
-  const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
+
   useEffect(() => {
-    // for (const e in retrivedata) {
-    //   if (parseInt(retrivedata[e].id) === parseInt(id)) {
-    //     setFormData(retrivedata);
-    //     break;
-    //   }
-    // }
+    for (const e in retrivedata) {
+      if (parseInt(retrivedata[e].id) === parseInt(id)) {
+        setFormData(retrivedata[e]);
+        console.log(retrivedata, "retrieesfsd");
+        break;
+      }
+    }
   }, []);
   return (
     <>
@@ -289,7 +326,12 @@ function TransactionForm() {
                 name="monthYear"
                 className="input"
                 value={formData.monthYear}
-                onChange={onChangeHandler}
+                onChange={(e) =>
+                  setFormData({
+                    ...formData,
+                    [e.target.name]: e.target.value,
+                  })
+                }
               >
                 <option value="" disabled>
                   Select Month Year
@@ -301,7 +343,7 @@ function TransactionForm() {
                   </option>
                 ))}
               </select>
-
+              {/* <span className="span1">{formError.monthYear}</span> */}
               {/* <select
                 className="input"
                 name="monthYear"
@@ -324,9 +366,24 @@ function TransactionForm() {
                 <option value="nov ${year}">nov {year}</option>
                 <option value="dec ${year}">dec {year}</option>
               </select> */}
-              <span className="span1">{formError.monthYear}</span>
 
               <label>Transaction Type</label>
+              {/* <select
+                name="transactionType"
+                className="input"
+                value={formData.transactionType}
+                onChange={onChangeHandler}
+              >
+                <option value="" disabled>
+                  Select transactionType
+                </option>
+
+                {transactionTypeList.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select> */}
               <select
                 className="input"
                 name="transactionType"
@@ -340,13 +397,29 @@ function TransactionForm() {
               <span className="span1">{formError.transactionType}</span>
 
               <label>From Account</label>
+              {/* <select
+                name="fromAccount"
+                className="input"
+                value={formData.fromAccount}
+                onChange={onChangeHandler}
+              >
+                <option value="" disabled>
+                  Select From Account
+                </option>
+
+                {fromAccountList.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select> */}
               <select
                 className="input"
                 name="fromAccount"
                 onChange={onChangeHandler}
-                //  value={formData.fromAccount}
+                value={formData.fromAccount}
               >
-                <option value="Personal Expense">Personal Account</option>
+                <option value="Personal Expense">Personal Expense</option>
                 <option value="Real Living">Real Living </option>
                 <option value="My Dream Home">My Dream Home</option>
                 <option value="Full circle">Full circle</option>
@@ -356,19 +429,38 @@ function TransactionForm() {
               <span className="span1">{formError.fromAccount}</span>
 
               <label>To Account</label>
+
+              {/* <select
+                name="toAccount"
+                className="input"
+                value={formData.toAccount}
+                onChange={onChangeHandler}
+              >
+                <option value="" disabled>
+                  Select To Account
+                </option>
+
+                {toAccountList.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select> */}
+
               <select
                 className="input"
                 name="toAccount"
                 onChange={onChangeHandler}
                 value={formData.toAccount}
               >
-                <option value="Personal Expense">Personal Account</option>
+                <option value="Personal Expense">Personal Expense</option>
                 <option value="Real Living">Real Living </option>
                 <option value="My Dream Home">My Dream Home</option>
                 <option value="Full circle">Full circle</option>
                 <option value="Core Realtors">Core Realtors</option>
                 <option value="Big Block">Big Block</option>
               </select>
+
               <span className="span1">{formError.toAccount}</span>
 
               <label htmlFor="amount">Amount </label>
@@ -382,20 +474,30 @@ function TransactionForm() {
 
               <label htmlFor="receipt">Receipt </label>
               <div>
-                <input
-                 
-                  type="file"
-                  className="input"
-                  name="receipt"
-                  // value={formData.receipt }
-                  onChange={handleImg}
-                />
-                <button type="button" value="remove" onclick={handleRemove}>
-                  remove
-                </button>
-                <img src={formData.receipt} height={60} width={50} alt=""></img>
+                {formData.receipt ? (
+                  <>
+                    <img
+                      src={formData.receipt}
+                      height={60}
+                      width={50}
+                      alt=""
+                    ></img>
+                    <button type="button" value="remove" onclick={handleRemove}>
+                      remove
+                    </button>
+                  </>
+                ) : (
+                  <input
+                    accept="image/jpg, image/png, image/jpeg"
+                    type="file"
+                    className="input"
+                    name="receipt"
+                    value={formData.receipt }
+                    onChange={handleImg}
+                  />
+                )}
+                <span className="span1">{formError.receipt}</span>
               </div>
-              <span className="span1">{formError.receipt}</span>
 
               <label htmlFor="notes">Notes </label>
               <textarea
