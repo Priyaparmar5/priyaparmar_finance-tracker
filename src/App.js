@@ -1,24 +1,29 @@
-import logo from './logo.svg';
 import './App.css';
+import Pagination from './components/Pagination';
+import TransactionForm from './components/TransactionForm';
+import ViewData from './components/ViewData';
+import ViewDetail from './components/ViewDetail.js';
+import EditTransaction from './components/EditTransaction';
+import Login from './components/Login';
+import Registration from './components/Registration';
+import Home from './components/Home';
+import Search from './components/Search';
+import Unauth from './Services/Unauth';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+    <Unauth/>
+  <TransactionForm/>
+  <Home/>
+  <Login/>
+  <Search/>
+  <Registration/>
+  <ViewData/>
+  <ViewDetail/>
+  <Pagination/>
+  <EditTransaction/>
+  </>
   );
 }
 
