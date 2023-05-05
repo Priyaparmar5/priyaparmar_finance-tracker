@@ -200,7 +200,7 @@ input[type=text]:focus{
   /* display: block; */
   height: 30px;
   width: 20%;
-  margin-left: 25%;
+  margin-left: 5%;
   margin-bottom: 10px;
   background-color:white;
   border-radius: 3px;
@@ -210,6 +210,17 @@ input[type=text]:focus{
   font-weight: 300;
 }
 
+.logout-btn{
+  background-color: rgb(184, 162, 225);
+  font-size: 18px;
+  padding: 5px 10px;
+  margin-left: 85%;
+  margin-bottom: 15px;
+  border-radius: 5px;
+  color: black;
+  border: 1px solid black;
+  text-decoration: none;
+}
 
 .input-1{
   /* display: block; */

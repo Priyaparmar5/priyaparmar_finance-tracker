@@ -132,7 +132,7 @@ function ViewData() {
     <>
       <div>
         <div>
-          <button className="add-btn" onClick={handleLogout}>
+          <button className="logout-btn" onClick={handleLogout}>
             Logout
           </button>
         </div>
@@ -141,6 +141,7 @@ function ViewData() {
       {localData ? (
         <>
           <>
+          <Link to={'/add'} className="add-btn" >Add transaction</Link>
             <select
               name="selectData"
               onChange={handleGroupChange}

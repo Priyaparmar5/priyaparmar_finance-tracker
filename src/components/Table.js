@@ -130,13 +130,14 @@ function Table(props) {
       />
     
 
-      <Link to={'/add'} className="add-btn" >Add transaction</Link>
+    
       {/* <button type="button" className="backbtn" onClick={() => navigate(-1)}>
         Go back
       </button> */}
 
 
       <div className="TableDesign">
+      
         <table className="table">
           <tr>
             {/* <th>id</th> */}

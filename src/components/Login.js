@@ -81,7 +81,7 @@ function Login() {
               counter += 1;
           }
           input['token'] = result;
-          localStorage.setItem('LoggedIn User', JSON.stringify(input))
+          localStorage.setItem('token', JSON.stringify(input))
           navigate('/ViewData')
           //  generate_token(32);
            // localStorage.setItem('LoggedIn user', JSON.stringify(input))

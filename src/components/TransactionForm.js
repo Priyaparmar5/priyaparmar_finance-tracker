@@ -1,6 +1,10 @@
 import "../App.css";
 import { useState, useEffect, React } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
+//import { FormField  } from "./FormFields/FormField";
+// import {
+//   monthYearList,
+// } from '../utils/constants';
 
 function TransactionForm() {
   const monthYearList = [
@@ -65,7 +69,15 @@ function TransactionForm() {
     notes: "",
   };
 
-  //let fileInput =React.createRef();
+  // const FieldWrapper = ({ setValues, ...rest }) => (
+  //   <FormField
+  //     {...rest}
+  //     onChange={(value) => {
+  //       setValues((old) => ({ ...old, [rest.name]: value }));
+  //     }}
+  //   />
+  // );
+  // //let fileInput =React.createRef();
 
   const [formData, setFormData] = useState(initialValues);
   const [isSubmit, setSubmit] = useState(false);
@@ -188,8 +200,8 @@ function TransactionForm() {
       err.transactionDate = "transaction date required";
     }
 
-    if (formData.monthYear === "") {
-      err.monthYear = "please select anyone value";
+    if (formData.monthYear.length === 0) {
+      err.monthYear[monthYearList] = "please select anyone value";
     }
 
     if (formData.fromAccount === "") {
@@ -232,6 +244,7 @@ function TransactionForm() {
   };
 
   console.log(formData.transactionDate, "formdddddddddd");
+  //const fieldPropsCommon = { values, errors, setValues };
 
   const { id } = useParams();
   console.log({ id }, "param");
@@ -318,8 +331,8 @@ function TransactionForm() {
                 onChange={onChangeHandler}
                 value={formData.transactionDate}
               />
-
               <span className="span1">{formError.transactionDate}</span>
+
               <label>Month Year</label>
 
               <select
@@ -492,7 +505,7 @@ function TransactionForm() {
                     type="file"
                     className="input"
                     name="receipt"
-                    value={formData.receipt }
+                    value={formData.receipt}
                     onChange={handleImg}
                   />
                 )}

@@ -1,0 +1,23 @@
+.table-detail{
+    border: 1px solid rgb(116, 100, 185);
+    font-size: 18px;
+    color: rgb(201, 35, 35);
+    /* width: 90%; */
+    height: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align:left;
+    background-color: #dcf0f8;
+    margin-top: 5px;
+  }
+  .h1{
+    color: green;
+    text-align: center;
+  }
+  .backbtn{
+    background-color: rgb(162, 225, 204);
+    font-size: 18px;
+    padding: 5px 10px;
+    margin-left: 89%;
+    border-radius: 5px;
+  }
