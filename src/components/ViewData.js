@@ -20,8 +20,6 @@ function ViewData() {
   const [myLocalStorageData, setMyLocalStorageData] = useState([]);
   const [groupData, setGroupData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [postPerPage, setPostPerPage] = useState(3);
-  const [query, setQuery] = useState("");
   const recordsPerPage = 3;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
@@ -38,60 +36,10 @@ function ViewData() {
 
   const handleLogout = (id) => {
     localStorage.removeItem("token");
-    // setInput((user) => {
-    //   return user.filter((toDel) =>
-    //   toDel.id !== id,
-    //   localStorage.removeItem("token")
-    //   );
-    // });
 
     navigate("/public/login");
   };
 
-  // const handleDelete = (outIndex) => {
-  //   const val = myLocalStorageData.filter((data, inIndex) => {
-  //     if (outIndex !== inIndex) {
-  //       return data;
-  //     }
-  //   });
-  //   setMyLocalStorageData(val);
-  //   localStorage.setItem("key", JSON.stringify(val));
-  // };
-
-  // const sorting = (col) => {
-  //   if (order === "ASC") {
-  //     const sorted = [...myLocalStorageData].sort((a, b) =>
-  //       a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1
-  //     );
-  //     setMyLocalStorageData(sorted);
-  //     setOrder("DSC");
-  //   }
-  //   if (order === "DSC") {
-  //     const sorted = [...myLocalStorageData].sort((a, b) =>
-  //       a[col].toLowerCase() < b[col].toLowerCase() ? 1 : -1
-  //     );
-  //     setMyLocalStorageData(sorted);
-  //     setOrder("ASC");
-  //   }
-  // };
-
-  //sorting groupby
-  const sortingG = (col) => {
-    if (order === "ASC") {
-      const sorted = [...groupData].sort((a, b) =>
-        a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1
-      );
-      setGroupData(sorted);
-      setOrder("DSC");
-    }
-    if (order === "DSC") {
-      const sorted = [...groupData].sort((a, b) =>
-        a[col].toLowerCase() < b[col].toLowerCase() ? 1 : -1
-      );
-      setGroupData(sorted);
-      setOrder("ASC");
-    }
-  };
 
   const localData = JSON.parse(localStorage.getItem("key"));
 
@@ -118,13 +66,7 @@ function ViewData() {
     console.log(resultdata, "resulttttt");
   };
 
-  console.log(localData, "locaalll");
-  // useEffect(() => {
-  //   const data = JSON.parse(localStorage.getItem("key"));
-  //   console.log(data, "dattaaaa");
-  //   //  setState(data)
-  //   setMyLocalStorageData(data);
-  // }, []);
+
   console.log(Object.keys(groupData).length);
   return (
     <>

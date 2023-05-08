@@ -31,7 +31,7 @@ export const fromAccountList = [
     { value: "Big Block", label: "Big Block" },
   ];
 
-  const transactionTypeList = [
+  export const transactionTypeList = [
     { value: "Home Expense", label: "Home Expense" },
     { value: "Personal Expense", label: "Personal Expense" },
     { value: "Income", label: "Income" },
