@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import {Outlet,Route,Routes, Navigate,useNavigate} from "react-router-dom";
-import Login from '../components/Login'
-import Registration from '../components/Registration'
+import Login from '../pages/login/Login'
+import Registration from '../pages/register/Registration'
 import ViewData from '../components/ViewData'
 
 const Unauth =() =>{

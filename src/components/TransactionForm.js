@@ -1,6 +1,8 @@
 import "../App.css";
 import { useState, useEffect, React } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
+import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
+
 //import { FormField  } from "./FormFields/FormField";
 // import {
 //   monthYearList,
@@ -52,18 +54,10 @@ function TransactionForm() {
 
   const initialValues = {
     transactionDate: "",
-    monthYear: {
-      monthYearList,
-    },
-    transactionType: {
-      transactionTypeList,
-    },
-    fromAccount: {
-      fromAccountList,
-    },
-    toAccount: {
-      toAccountList,
-    },
+    monthYear: "",
+    transactionType:"",
+    fromAccount:"",
+    toAccount:"",
     amount: "",
     receipt: "",
     notes: "",
@@ -134,40 +128,88 @@ function TransactionForm() {
   };
 
   const onChangeHandler = (event) => {
-    console.log(event, "event");
-    //
-    // setFormData(event.target.files[0])
-    //
+    const { name, value } = event.target;
+  //  setFormData({ ...formData, [name]: value });
+  let newErrors = { ...formError };
 
-    if (event.target.name === "languages") {
-      let copy = { ...formData };
-
-      if (event.target.checked) {
-        copy.languages.push(event.target.value);
+  switch (name) {
+    case 'transactionDate':
+      if (!value) {
+        newErrors[name] = 'transactionDate is required';
       } else {
-        copy.languages = copy.languages.filter(
-          (el) => el !== event.target.value
-        );
+        delete newErrors[name];
       }
-
-      setFormData(copy);
-    } else {
-      setFormData(() => ({
-        ...formData,
-        [event.target.name]: event.target.value,
-      }));
+      break;
+    case 'transactionType':
+      if (!value) {
+        newErrors[name] = 'transactionType is required';
+      }else {
+        delete newErrors[name];
+      }
+      break;
+    case 'monthYear':
+        if (!value) {
+          newErrors[name] = 'Month year is required';
+        } else {
+          delete newErrors[name];
+        }
+        break;
+    case 'fromAccount':
+        if (!value) {
+          newErrors[name] = 'From account is required';
+        } else {
+          delete newErrors[name];
+        }
+        break;
+    case 'toAccount':
+          if (!value) {
+            newErrors[name] = 'to account is required';
+          } else {
+            delete newErrors[name];
+          }
+          break;
+    case 'amount':
+          if (!value) {
+            newErrors[name] = 'amount is required';
+          } else {
+            delete newErrors[name];
+          }
+          break;
+    case 'reciept':
+          if (!value) {
+            newErrors[name] = 'receipt is required';
+          } else {
+            delete newErrors[name];
+          }
+          break;
+    case 'notes':
+          if (!value) {
+            newErrors[name] = 'notes is required';
+          } else {
+            delete newErrors[name];
+          }
+            break;
+      default:
+        break;
     }
+  
+    setFormData((prevFormData) => ({
+      ...prevFormData,
+      [name]: value
+    }));
+    setFormError(newErrors);
+
   };
 
   const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
   const navigate = useNavigate();
 
-  const validate = (event) => {
-    let err = {};
-    if (event.target.value === "") {
-      err = "select value";
-    }
-  };
+  // const validate = (event) => {
+  //   let err = {};
+  //   if (event.target.value === "") {
+  //     err = "select value";
+  //   }
+  // };
 
   const validateForm = (e) => {
     let err = {};
@@ -189,6 +231,15 @@ function TransactionForm() {
     // if (formData.receipt.size > 1024) {
     //   err.receipt = "size";
     // }
+    
+
+    if (!formData.transactionDate) {
+          err.transactionDate = "Transaction date is required";
+    }
+
+    if (!formData.transactionType) {
+        err.transactionType = "Transaction type is required";
+    }    
 
     if (formData.receipt === "") {
       err.receipt = "receipt is required";
@@ -196,81 +247,38 @@ function TransactionForm() {
       err.receipt = "File size should be less than  1 mb";
     }
 
-    if (formData.transactionDate === "") {
-      err.transactionDate = "transaction date required";
+    // if (formData.transactionDate === "") {
+    //   err.transactionDate = "transaction date required";
+    // }
+
+    if (!formData.monthYear) {
+      err.monthYear = "please select anyone value";
     }
 
-    if (formData.monthYear.length === 0) {
-      err.monthYear[monthYearList] = "please select anyone value";
-    }
-
-    if (formData.fromAccount === "") {
+    if (!formData.fromAccount) {
       err.fromAccount = "please select anyone value";
     }
 
-    if (formData.transactionType === "") {
-      err.transactionType = "please select anyone value";
-    }
-
-    if (formData.toAccount === "") {
+    if (!formData.toAccount) {
       err.toAccount = "please select anyone value";
-    } else if (formData.fromAccount == formData.toAccount) {
+    } else if (formData.fromAccount === formData.toAccount) {
       err.toAccount = "both values can't be same";
     }
 
-    if (formData.notes === "") {
+    if (!formData.notes.trim()) {
       err.notes = "notes is required";
     }
 
-    if (formData.amount === "") {
+    if (!formData.amount.trim()) {
       err.amount = "amount is required";
     } else if (formData.amount < 0) {
       err.amount = "amount should be greater than 0";
     } else if (isNaN(formData.amount)) {
       err.amount = "amount should be in digit ";
     }
-    // else if(formData.amount.trim() == "")
-    // {
-    //     err.amount= "this field can't be empty";
-    // }
-    else if (isNaN(formData.amount)) {
-      err.amount = "amount must be in digit";
-    }
-
-    setFormError({ ...err });
     const data = { ...formData };
 
-    return Object.keys(err).length < 1;
-  };
-
-  console.log(formData.transactionDate, "formdddddddddd");
-  //const fieldPropsCommon = { values, errors, setValues };
-
-  const { id } = useParams();
-  console.log({ id }, "param");
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    let isValid = validateForm();
-
-    const data = { ...formData };
-    console.log(data, "datuuuu");
-    console.log(data.id, "dataid");
-    console.log("dataaaaa", data);
-    const isSubmit = true;
-    //   if(isValid){
-    //     if (localStorage.getItem("key")) {
-
-    //         const retrivedata = JSON.parse(localStorage.getItem("key"));
-    //         console.log("retrieve data", retrivedata);
-    //         retrivedata.push(data);
-
-    //         localStorage.setItem("key", JSON.stringify(retrivedata));
-    //     } else {
-    //         localStorage.setItem("key", JSON.stringify([data]));
-    //     }
-    // }
-    if (isValid) {
+    if (Object.keys(err).length === 0) {
       console.log("hello");
       if (localStorage.getItem("key")) {
         const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
@@ -297,6 +305,31 @@ function TransactionForm() {
       }
       navigate("/viewData");
     }
+    if (Object.keys(err).length > 0) {
+      setFormError(err);
+    } else {
+      setFormError({});
+    }
+ //   setFormError( err );
+    
+  };
+
+  console.log(formData.transactionDate, "formdddddddddd");
+  //const fieldPropsCommon = { values, errors, setValues };
+
+  const { id } = useParams();
+  console.log({ id }, "param");
+ 
+ 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    let isValid = validateForm();
+  
+    const data = { ...formData };
+    console.log(data, "datuuuu");
+    console.log(isValid,"isvaliddd")
+ 
   };
 
   useEffect(() => {
@@ -311,9 +344,8 @@ function TransactionForm() {
   return (
     <>
       <ul>
-        <li>
-          <Link to="/ViewData">ViewData</Link>
-        </li>
+          <Link to="/ViewData" className="add-btn">ViewData</Link>
+        
       </ul>
       <form onSubmit={handleSubmit}>
         <div className="section">
@@ -328,9 +360,10 @@ function TransactionForm() {
                 type="date"
                 className="input"
                 name="transactionDate"
-                onChange={onChangeHandler}
                 value={formData.transactionDate}
+                onChange={onChangeHandler}
               />
+              
               <span className="span1">{formError.transactionDate}</span>
 
               <label>Month Year</label>
@@ -339,13 +372,8 @@ function TransactionForm() {
                 name="monthYear"
                 className="input"
                 value={formData.monthYear}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    [e.target.name]: e.target.value,
-                  })
-                }
-              >
+                onChange={onChangeHandler}
+               >
                 <option value="" disabled>
                   Select Month Year
                 </option>
@@ -356,36 +384,15 @@ function TransactionForm() {
                   </option>
                 ))}
               </select>
-              {/* <span className="span1">{formError.monthYear}</span> */}
-              {/* <select
-                className="input"
-                name="monthYear"
-                value={formData.monthYear}
-                onChange={onChangeHandler}
-              >
-                <option selected >
-                  Select language
-                </option>
-                <option value="jan ${year}">Jan {year}</option>
-                <option value="feb ${year}">feb {year}</option>
-                <option value="mar ${year}">mar {year}</option>
-                <option value="apr ${year}">apr {year}</option>
-                <option value="may ${year}">may {year}</option>
-                <option value="jun ${year}">jun {year}</option>
-                <option value="jul ${year}">jul {year}</option>
-                <option value="aug ${year}">aug {year}</option>
-                <option value="sep ${year}">sep {year}</option>
-                <option value="oct ${year}">oct {year}</option>
-                <option value="nov ${year}">nov {year}</option>
-                <option value="dec ${year}">dec {year}</option>
-              </select> */}
+              <span className="span1">{formError.monthYear}</span>
+             
 
               <label>Transaction Type</label>
-              {/* <select
+              <select
                 name="transactionType"
                 className="input"
                 value={formData.transactionType}
-                onChange={onChangeHandler}
+                  onChange={onChangeHandler}
               >
                 <option value="" disabled>
                   Select transactionType
@@ -396,21 +403,12 @@ function TransactionForm() {
                     {option.label}
                   </option>
                 ))}
-              </select> */}
-              <select
-                className="input"
-                name="transactionType"
-                onChange={onChangeHandler}
-                value={formData.transactionType}
-              >
-                <option value="Home Expense">Home Expense</option>
-                <option value="Personal Expense">Personal Expense</option>
-                <option value="Income">Income</option>
               </select>
+             
               <span className="span1">{formError.transactionType}</span>
 
               <label>From Account</label>
-              {/* <select
+              <select
                 name="fromAccount"
                 className="input"
                 value={formData.fromAccount}
@@ -425,25 +423,13 @@ function TransactionForm() {
                     {option.label}
                   </option>
                 ))}
-              </select> */}
-              <select
-                className="input"
-                name="fromAccount"
-                onChange={onChangeHandler}
-                value={formData.fromAccount}
-              >
-                <option value="Personal Expense">Personal Expense</option>
-                <option value="Real Living">Real Living </option>
-                <option value="My Dream Home">My Dream Home</option>
-                <option value="Full circle">Full circle</option>
-                <option value="Core Realtors">Core Realtors</option>
-                <option value="Big Block">Big Block</option>
               </select>
+             
               <span className="span1">{formError.fromAccount}</span>
 
               <label>To Account</label>
 
-              {/* <select
+              <select
                 name="toAccount"
                 className="input"
                 value={formData.toAccount}
@@ -458,20 +444,6 @@ function TransactionForm() {
                     {option.label}
                   </option>
                 ))}
-              </select> */}
-
-              <select
-                className="input"
-                name="toAccount"
-                onChange={onChangeHandler}
-                value={formData.toAccount}
-              >
-                <option value="Personal Expense">Personal Expense</option>
-                <option value="Real Living">Real Living </option>
-                <option value="My Dream Home">My Dream Home</option>
-                <option value="Full circle">Full circle</option>
-                <option value="Core Realtors">Core Realtors</option>
-                <option value="Big Block">Big Block</option>
               </select>
 
               <span className="span1">{formError.toAccount}</span>
@@ -487,7 +459,6 @@ function TransactionForm() {
 
               <label htmlFor="receipt">Receipt </label>
               <div>
-                {formData.receipt ? (
                   <>
                     <img
                       src={formData.receipt}
@@ -495,11 +466,11 @@ function TransactionForm() {
                       width={50}
                       alt=""
                     ></img>
-                    <button type="button" value="remove" onclick={handleRemove}>
+                    {/* <button type="button" value="remove" onclick={handleRemove}>
                       remove
-                    </button>
+                    </button> */}
                   </>
-                ) : (
+               
                   <input
                     accept="image/jpg, image/png, image/jpeg"
                     type="file"
@@ -508,7 +479,6 @@ function TransactionForm() {
                     value={formData.receipt}
                     onChange={handleImg}
                   />
-                )}
                 <span className="span1">{formError.receipt}</span>
               </div>
 

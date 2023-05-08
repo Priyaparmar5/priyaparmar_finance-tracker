@@ -2,7 +2,7 @@ import {React,useEffect,useState} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 
 function Login() {
-
+ 
   const navigate = useNavigate();
 
   const initialValues = {
@@ -116,6 +116,9 @@ function Login() {
                 }
               />
                <p className='span1'>{formError.email}</p>
+
+                     
+
              <label htmlFor="password">password</label>
               <input
                 type="password"
@@ -129,7 +132,7 @@ function Login() {
                     })
                 }}
               />
-                <p className='span1'>{formError.email}</p>
+                <p className='span1'>{formError.password}</p>
               <div className="bottom">
                 <input className="input" type="submit" value="submit" />
                 <Link to="/public/registration">Register Here</Link>

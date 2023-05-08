@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import {Outlet, Navigate,useNavigate,Route,Routes} from "react-router-dom";
-import Login from '../components/Login'
+import Login from '../pages/login/Login'
 import TransactionForm from '../components/TransactionForm';
 import ViewData from '../components/ViewData';
 import ViewDetail from '../components/ViewDetail.js';
 import Pagination from '../components/Pagination';
-import Registration from '../components/Registration';
+import Registration from '../pages/register/Registration';
 import Search from '../components/Search';
 
 const ProtectedRoutes = () => {

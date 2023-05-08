@@ -2,14 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import './index.css';
-import TransactionForm from './components/TransactionForm';
-import ViewData from './components/ViewData';
-import ViewDetail from './components/ViewDetail.js';
-import Pagination from './components/Pagination';
-import Registration from './components/Registration';
-import Search from './components/Search';
-import Login from './components/Login';
-import Home from './components/Home';
+
 import Unauth from './Services/Unauth'
 import ProtectedRoutes from './Services/ProtectedRoutes';
 
