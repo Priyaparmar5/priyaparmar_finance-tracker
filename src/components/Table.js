@@ -82,11 +82,8 @@ function Table(props) {
   
   const sorting = (col) => {
      setCurrentPage(1);
-    if(order === "normal"){
-      setMyLocalStorageData(tabledData)
-      setOrder(tabledData)
-    }
-    else if (col === "monthYear") {
+    
+     if (col === "monthYear") {
       let datanew = [...myLocalStorageData]
 
       if (order === 'ASC') {
@@ -118,6 +115,10 @@ function Table(props) {
       setMyLocalStorageData(sorted);
       setOrder("ASC");
     }
+   else {
+      setMyLocalStorageData(tabledData)
+      setOrder(tabledData)
+    }
   };
 
 
@@ -127,6 +128,9 @@ function Table(props) {
       <Search myLocalStorageData={myLocalStorageData}
         setMyLocalStorageData={setMyLocalStorageData}
         tabledData={tabledData}
+        setCurrentPage={setCurrentPage}
+        lastIndex={lastIndex}
+        firstIndex={firstIndex}
       />
     
 

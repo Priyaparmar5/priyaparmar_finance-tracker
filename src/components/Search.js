@@ -2,11 +2,21 @@ import { omit } from 'lodash';
 import {React,useState} from 'react'
 import "../App.css";
 
-const  Search = ({myLocalStorageData,setMyLocalStorageData,tabledData}) =>{
+const  Search = ({myLocalStorageData,setMyLocalStorageData,tabledData,setCurrentPage,lastIndex,firstIndex}) =>{
     const [query, setQuery] = useState('');
+    const [currentPageData, setCurrentPageData] = useState([]);
 
     //const val = props.name;
 
+    const onPageChange = (newPage, data) => {
+      const filtered = data ? data : [...query];
+      const start = (newPage - 1) * firstIndex;
+      const end = newPage * lastIndex;
+      setCurrentPage(newPage);
+      setCurrentPageData(filtered.slice(start, end))
+    }
+
+  
     const handlesearch = (event) => {
         const getSearch = event.target.value;
         if (getSearch.length > 0) {
@@ -16,10 +26,12 @@ const  Search = ({myLocalStorageData,setMyLocalStorageData,tabledData}) =>{
             item.toAccount.toLowerCase().includes(getSearch)|| item.monthYear.toLowerCase().includes(getSearch) ||  item.amount.includes(getSearch) 
           );
           setMyLocalStorageData(searchdata);
+          onPageChange(1,searchdata);
         } else {
           setMyLocalStorageData(tabledData);
         }
         setQuery(getSearch);
+      
       };
   return (
     <div>

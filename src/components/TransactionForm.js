@@ -476,7 +476,7 @@ function TransactionForm() {
                     type="file"
                     className="input"
                     name="receipt"
-                    value={formData.receipt}
+                    // value={formData.receipt}
                     onChange={handleImg}
                   />
                 <span className="span1">{formError.receipt}</span>

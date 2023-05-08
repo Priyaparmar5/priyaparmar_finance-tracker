@@ -32,11 +32,9 @@ function ViewData() {
   const page = Math.ceil(myLocalStorageData.length / recordsPerPage);
   const numbers = [...Array(page + 1).keys()].slice(1);
 
-  const [order, setOrder] = useState("ASC");
+  const [order, setOrder] = useState("normal");
 
-  console.log(records, "records");
-  console.log(lastIndex, "lrecords");
-  console.log(firstIndex, "frecords");
+
 
   const handleLogout = (id) => {
     localStorage.removeItem("token");
