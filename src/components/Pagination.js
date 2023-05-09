@@ -12,14 +12,14 @@ const Pagination = ({
   const handlePrevClick = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
-      //  onPageChange(currentPage - 1);
+      
     }
   };
 
   const handleNextClick = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
-      //   onPageChange(currentPage + 1);
+
     }
   };
 

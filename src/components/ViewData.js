@@ -5,16 +5,6 @@ import { Link, Outlet, json, useNavigate } from "react-router-dom";
 import Table from "./Table";
 
 function ViewData() {
-  const [state, setState] = useState({
-    transactionDate: "",
-    monthYear: "",
-    transactionType: "",
-    fromAccount: "",
-    toAccount: "",
-    amount: "",
-    receipt: "",
-    notes: "",
-  });
 
   const navigate = useNavigate();
   const [myLocalStorageData, setMyLocalStorageData] = useState([]);
@@ -28,10 +18,6 @@ function ViewData() {
   //const groupData = [...groupData].slice(firstIndex, lastIndex);
 
   const page = Math.ceil(myLocalStorageData.length / recordsPerPage);
-  const numbers = [...Array(page + 1).keys()].slice(1);
-
-  const [order, setOrder] = useState("normal");
-
 
 
   const handleLogout = (id) => {

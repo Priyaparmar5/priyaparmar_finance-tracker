@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
-import { Link, Outlet, json, useNavigate } from "react-router-dom";
+import { Link, Outlet, json, useNavigate, useParams } from "react-router-dom";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Pagination from "./Pagination";
@@ -43,6 +43,7 @@ function Table(props) {
   let year = date.getFullYear();
   const months = [`Jan ${year}`, `Feb ${year}`, `Mar ${year}`, `Apr ${year}`, `May ${year}`, `Jun ${year}`, `Jul ${year}`, `Aug ${year}`, `Sep ${year}`, `Oct ${year}`, `Nov ${year}`, `Dec ${year}`]
 
+  const {id} = useParams();
 
   console.log(records, "records");
   console.log(lastIndex, "lrecords");
@@ -50,10 +51,14 @@ function Table(props) {
 
   const handleDelete = (outIndex) => {
     const val = myLocalStorageData.filter((data, inIndex) => {
+     
       if (outIndex !== inIndex) {
+        console.log(outIndex,"out");
+        console.log(inIndex,"in");
         return data;
       }
     });
+   
     setMyLocalStorageData(val);
     localStorage.setItem("key", JSON.stringify(val));
   };

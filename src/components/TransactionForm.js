@@ -1,8 +1,11 @@
 import "../App.css";
+import { useForm } from 'react-hook-form';
+
 import { useState, useEffect, React } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-
+import  {yupResolver} from "@hookform/resolvers/yup"
+import * as yup from 'yup'
 //import { FormField  } from "./FormFields/FormField";
 import {
   monthYearList,fromAccountList,toAccountList,transactionTypeList
@@ -11,8 +14,6 @@ import {
 function TransactionForm() {
 
   const [formError, setFormError] = useState({});
-  let date = new Date();
-  let year = date.getFullYear();
 
   const initialValues = {
     transactionDate: "",
@@ -25,15 +26,33 @@ function TransactionForm() {
     notes: "",
   };
 
-  // const FieldWrapper = ({ setValues, ...rest }) => (
-  //   <FormField
-  //     {...rest}
-  //     onChange={(value) => {
-  //       setValues((old) => ({ ...old, [rest.name]: value }));
-  //     }}
-  //   />
-  // );
-  // //let fileInput =React.createRef();
+  const schema =  yup.object().shape({
+    transactionDate : yup.string().required("transactionDate is required"),
+    monthYear:yup.string().required("Please select a product"),
+  //  monthYear : yup.string().required("monthYear is required"),
+ //   monthYear:yup.array().required("Please select an hobby"),
+    transactionType : yup.string().required("Transaction type is required"),
+    fromAccount : yup.string().required("fromAccount is required"), 
+    toAccount : yup.string().required("toAccount is required"), 
+    amount : yup.string().required("amount is required"), 
+    notes : yup.string().required("notes is required"), 
+    receipt : yup.mixed().test('required',"please select file",value=>{return value && value.length})
+
+  })
+
+  const {
+    register,
+    trigger,
+    handleSubmit,
+    watch,
+    setValue,
+    formState:{errors}
+  }=useForm({    mode: "onChange",
+  resolver: yupResolver(schema), initialValues});
+
+
+  let date = new Date();
+  let year = date.getFullYear();
 
   const [formData, setFormData] = useState(initialValues);
   const [isSubmit, setSubmit] = useState(false);
@@ -85,11 +104,21 @@ function TransactionForm() {
     setFormError({ ...err });
   };
 
-  const handleRemove = () => {
-    setFormData({ ...formData, receipt: "" });
+  const onChangeHandler = (e) => {
+    const { name, value } = e.target;
+    setFormData((previousValues) => ({
+      ...previousValues,
+      [name]: value
+    }));
   };
 
-  const onChangeHandler = (event) => {
+  //
+  // setFormData((prevFormData) => ({
+  //   ...prevFormData,
+  //   [name]: value
+  // }));
+//
+  const onChangeHandler1 = (event) => {
     const { name, value } = event.target;
   //  setFormData({ ...formData, [name]: value });
   let newErrors = { ...formError };
@@ -163,15 +192,11 @@ function TransactionForm() {
 
   };
 
-  const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
+ // const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
   const navigate = useNavigate();
 
-  // const validate = (event) => {
-  //   let err = {};
-  //   if (event.target.value === "") {
-  //     err = "select value";
-  //   }
-  // };
+  
+ 
 
   const validateForm = (e) => {
     let err = {};
@@ -208,10 +233,6 @@ function TransactionForm() {
     } else if (formData.receipt.size > MIN_FILE_SIZE) {
       err.receipt = "File size should be less than  1 mb";
     }
-
-    // if (formData.transactionDate === "") {
-    //   err.transactionDate = "transaction date required";
-    // }
 
     if (!formData.monthYear) {
       err.monthYear = "please select anyone value";
@@ -283,22 +304,73 @@ function TransactionForm() {
   console.log({ id }, "param");
  
  
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    let isValid = validateForm();
-  
-    const data = { ...formData };
+  const onSubmit = async(e) => {
+
+   
+    const value = {...e};
+    const img =await getBase64(e.receipt[0]);
+    console.log(img,"imggggg");
+    e.receipt=img;
+    console.log(value,"eeeee");
+    const data = {...formData, transactionDate:value.transactionDate,
+    monthYear: value.monthYear,
+    transactionType:value.transactionType,
+    fromAccount:value.fromAccount,
+    toAccount:value.toAccount,
+    amount: value.amount,
+    receipt:img,
+    notes: value.notes,};
+      //setFormData(data);
     console.log(data, "datuuuu");
-    console.log(isValid,"isvaliddd")
+   
+      console.log("hello");
+      if (localStorage.getItem("key")) {
+        const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
+        console.log("id", id);
+        if (id) {
+          for (const e in retrivedata) {
+            if (parseInt(retrivedata[e].id) === parseInt(id)) {
+              data["id"] = id;
+              retrivedata[e] = data;
+            }
+          }
+          console.log(retrivedata, "data");
+          alert("update successfully");
+        } else {
+          console.log("in insert");
+          const previd = retrivedata[retrivedata.length - 1].id;
+          data["id"] = parseInt(previd) + 1;
+          retrivedata.push(data);
+          alert("insert successfully");
+        }
+        localStorage.setItem("key", JSON.stringify(retrivedata));
+      } else {
+        data["id"] = 1;
+        localStorage.setItem("key", JSON.stringify([data]));
+      }
+      navigate("/viewData"); 
  
   };
+  const doSomething = async (value) => {
+    // do something with my select value onChange
+    await trigger(['monthYear']) // Trigger validation on select
+  };
+
+  const convert2base64 = file =>{
+    const reader = new FileReader();
+    reader.onloadend = () =>{
+     const data = {...formData,receipt:reader.result.toString()};
+     setFormData(data);
+    }
+  }
+
+  const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
 
   useEffect(() => {
     for (const e in retrivedata) {
-      if (parseInt(retrivedata[e].id) === parseInt(id)) {
+      if (parseInt(retrivedata[e].id) === parseInt(id)) {   
         setFormData(retrivedata[e]);
-        console.log(retrivedata, "retrieesfsd");
+        console.log(retrivedata[e], "retrieesfsd");
         break;
       }
     }
@@ -309,7 +381,7 @@ function TransactionForm() {
           <Link to="/ViewData" className="add-btn">ViewData</Link>
         
       </ul>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <div className="section">
           <div className="row">
             <div className="container">
@@ -321,20 +393,27 @@ function TransactionForm() {
               <input
                 type="date"
                 className="input"
+               
                 name="transactionDate"
                 value={formData.transactionDate}
                 onChange={onChangeHandler}
+                {...register("transactionDate", 
+              )}
               />
               
-              <span className="span1">{formError.transactionDate}</span>
+              <span className="span1">{errors.transactionDate?.message}</span>
 
               <label>Month Year</label>
 
               <select
                 name="monthYear"
                 className="input"
+                 
                 value={formData.monthYear}
-                onChange={onChangeHandler}
+              //  onChange={onChangeHandler}
+                {...register("monthYear")}
+                onChange={(e) => doSomething(e.target.value)} // Using setValue
+
                >
                 <option value="" disabled>
                   Select Month Year
@@ -346,7 +425,7 @@ function TransactionForm() {
                   </option>
                 ))}
               </select>
-              <span className="span1">{formError.monthYear}</span>
+              <span className="span1">{errors.monthYear?.message}</span>
              
 
               <label>Transaction Type</label>
@@ -355,6 +434,7 @@ function TransactionForm() {
                 className="input"
                 value={formData.transactionType}
                   onChange={onChangeHandler}
+                  {...register("transactionType")}
               >
                 <option value="" disabled>
                   Select transactionType
@@ -367,14 +447,18 @@ function TransactionForm() {
                 ))}
               </select>
              
-              <span className="span1">{formError.transactionType}</span>
+              <span className="span1">{errors.transactionType?.message}</span>
 
               <label>From Account</label>
               <select
-                name="fromAccount"
+                
                 className="input"
-                value={formData.fromAccount}
-                onChange={onChangeHandler}
+               
+                {...register("fromAccount",{
+                  name:"fromAccount",
+                 value:formData.fromAccount,
+                  onChange:{onChangeHandler}
+                })}
               >
                 <option value="" disabled>
                   Select From Account
@@ -387,15 +471,16 @@ function TransactionForm() {
                 ))}
               </select>
              
-              <span className="span1">{formError.fromAccount}</span>
+              <span className="span1">{errors.fromAccount?.message}</span>
 
               <label>To Account</label>
 
               <select
                 name="toAccount"
                 className="input"
-                value={formData.toAccount}
+               value={formData.toAccount}
                 onChange={onChangeHandler}
+                {...register("toAccount")}
               >
                 <option value="" disabled>
                   Select To Account
@@ -408,40 +493,47 @@ function TransactionForm() {
                 ))}
               </select>
 
-              <span className="span1">{formError.toAccount}</span>
+              <span className="span1">{errors.toAccount?.message}</span>
 
               <label htmlFor="amount">Amount </label>
               <input
+                type="number"
                 className="input"
                 name="amount"
-                value={formData.amount}
+               value={formData.amount}
                 onChange={onChangeHandler}
+                {...register("amount")}
               />
-              <span className="span1">{formError.amount}</span>
+              <span className="span1">{errors.amount?.message}</span>
 
               <label htmlFor="receipt">Receipt </label>
               <div>
                   <>
+               
                     <img
                       src={formData.receipt}
                       height={60}
                       width={50}
                       alt=""
-                    ></img>
-                    {/* <button type="button" value="remove" onclick={handleRemove}>
-                      remove
-                    </button> */}
+                    />
+                    
                   </>
-               
+                 
+             
                   <input
                     accept="image/jpg, image/png, image/jpeg"
                     type="file"
                     className="input"
                     name="receipt"
-                    // value={formData.receipt}
-                    onChange={handleImg}
+                    {...register("receipt")}
+
+                   //  value={formData.receipt}
+                   // onChange={handleImg}
                   />
-                <span className="span1">{formError.receipt}</span>
+              
+                {/* <strong>{watch('receipt')[0].name}</strong> */}
+               
+                <span className="span1">{errors.receipt?.message}</span>
               </div>
 
               <label htmlFor="notes">Notes </label>
@@ -449,10 +541,11 @@ function TransactionForm() {
                 className="input"
                 name="notes"
                 maxLength="250"
+                {...register("notes")}
                 value={formData.notes}
                 onChange={onChangeHandler}
               />
-              <span className="span1">{formError.notes}</span>
+              <span className="span1">{errors.notes?.message}</span>
 
               <div className="bottom">
                 <input className="input" type="submit" value="submit" />
