@@ -48,7 +48,7 @@ function TransactionForm() {
     setValue,
     formState:{errors}
   }=useForm({    mode: "onChange",
-  resolver: yupResolver(schema), initialValues});
+  resolver: yupResolver(schema), defaultValues:initialValues});
 
 
   let date = new Date();
@@ -106,6 +106,7 @@ function TransactionForm() {
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
+    console.log(e.target,"heyy");
     setFormData((previousValues) => ({
       ...previousValues,
       [name]: value
@@ -395,7 +396,7 @@ function TransactionForm() {
                 className="input"
                
                 name="transactionDate"
-                value={formData.transactionDate}
+              //  value={formData.transactionDate}
                 onChange={onChangeHandler}
                 {...register("transactionDate", 
               )}
@@ -409,10 +410,10 @@ function TransactionForm() {
                 name="monthYear"
                 className="input"
                  
-                value={formData.monthYear}
-              //  onChange={onChangeHandler}
+              //  value={formData.monthYear}
+                onChange={onChangeHandler}
                 {...register("monthYear")}
-                onChange={(e) => doSomething(e.target.value)} // Using setValue
+                // onChange={(e) => doSomething(e.target.value)} // Using setValue
 
                >
                 <option value="" disabled>
@@ -432,7 +433,7 @@ function TransactionForm() {
               <select
                 name="transactionType"
                 className="input"
-                value={formData.transactionType}
+              //  value={formData.transactionType}
                   onChange={onChangeHandler}
                   {...register("transactionType")}
               >
@@ -453,12 +454,14 @@ function TransactionForm() {
               <select
                 
                 className="input"
-               
-                {...register("fromAccount",{
-                  name:"fromAccount",
-                 value:formData.fromAccount,
-                  onChange:{onChangeHandler}
-                })}
+                name="fromAccount"
+              // value={formData.fromAccount}
+                 onChange={onChangeHandler}
+                {...register("fromAccount"
+                //  name:"fromAccount",
+             //    value:formData.fromAccount,
+              //    onChange={onChangeHandler}
+                )}
               >
                 <option value="" disabled>
                   Select From Account
@@ -478,7 +481,7 @@ function TransactionForm() {
               <select
                 name="toAccount"
                 className="input"
-               value={formData.toAccount}
+             //  value={formData.toAccount}
                 onChange={onChangeHandler}
                 {...register("toAccount")}
               >
@@ -500,7 +503,7 @@ function TransactionForm() {
                 type="number"
                 className="input"
                 name="amount"
-               value={formData.amount}
+              // value={formData.amount}
                 onChange={onChangeHandler}
                 {...register("amount")}
               />
@@ -542,7 +545,7 @@ function TransactionForm() {
                 name="notes"
                 maxLength="250"
                 {...register("notes")}
-                value={formData.notes}
+             //  value={formData.notes}
                 onChange={onChangeHandler}
               />
               <span className="span1">{errors.notes?.message}</span>
