@@ -1,20 +1,22 @@
 import "../App.css";
 import { useForm } from 'react-hook-form';
 
-import { useState, useEffect, React } from "react";
-
+import { useState, useEffect, React, useContext } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import { yupResolver } from "@hookform/resolvers/yup"
+import { useTransactionContext } from "../context/TransactionContext";
 import * as yup from 'yup'
 //import { FormField  } from "./FormFields/FormField";
 import {
-  monthYearList, fromAccountList, toAccountList, transactionTypeList
+  monthYearList, fromAccountList, toAccountList, transactionTypeList, staticValues
 } from '../utils/constant';
 
 function TransactionForm() {
 
   const [formError, setFormError] = useState({});
+
+  const {transactionData,setTransactionData} = useTransactionContext();
 
   const initialValues = {
     transactionDate: "",
@@ -36,7 +38,7 @@ function TransactionForm() {
     //  monthYear : yup.string().required("monthYear is required"),
     //   monthYear:yup.array().required("Please select an hobby"),
     transactionType: yup.string().required("Transaction type is required"),
-    fromAccount: yup.string().required('from account is required').notOneOf([yup.ref('toAccount'), null], 'Both Values must be different'),
+    fromAccount: yup.string().required('from account is required').notOneOf([yup.ref('toAccount'),  ], 'Both Values must be different'),
     toAccount: yup.string().required("to account is required").notOneOf([yup.ref('fromAccount'), null], 'Both Values must be different'),
   
     amount: yup.string().required("amount is required"),
@@ -352,8 +354,8 @@ function TransactionForm() {
     console.log(data, "datuuuu");
 
     console.log("hello");
-    if (localStorage.getItem("key")) {
-      const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
+    if (transactionData) {
+      const retrivedata = transactionData || [];
       console.log("id", id);
       if (id) {
         for (const e in retrivedata) {
@@ -371,26 +373,17 @@ function TransactionForm() {
         retrivedata.push(data);
         alert("insert successfully");
       }
-      localStorage.setItem("key", JSON.stringify(retrivedata));
+      setTransactionData(retrivedata)
+      //localStorage.setItem("key", JSON.stringify(retrivedata));
     } else {
       data["id"] = 1;
-      localStorage.setItem("key", JSON.stringify([data]));
+     // localStorage.setItem("key", JSON.stringify([data]));
+      setTransactionData([data])
     }
     navigate("/viewData");
-
+    console.log("transactionnn",transactionData)
   };
-  const doSomething = async (value) => {
-    // do something with my select value onChange
-    await trigger(['monthYear']) // Trigger validation on select
-  };
-
-  const convert2base64 = file => {
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const data = { ...formData, receipt: reader.result.toString() };
-      setFormData(data);
-    }
-  }
+ 
 
   const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
 

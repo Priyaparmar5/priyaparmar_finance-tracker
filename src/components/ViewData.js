@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 import { Link, Outlet, json, useNavigate } from "react-router-dom";
-
+import { useTransactionContext } from "../context/TransactionContext";
 import Table from "./Table";
 
 function ViewData() {
@@ -19,6 +19,7 @@ function ViewData() {
 
   const page = Math.ceil(myLocalStorageData.length / recordsPerPage);
 
+  const {transactionData,setTransactionData} = useTransactionContext();
 
   const handleLogout = (id) => {
     localStorage.removeItem("token");
@@ -26,8 +27,8 @@ function ViewData() {
     navigate("/public/login");
   };
 
-
-  const localData = JSON.parse(localStorage.getItem("key"));
+  //const localData = JSON.parse(localStorage.getItem("key"));  
+  const localData = transactionData;  
 
   const handleGroupChange = (e) => {
     const resultdata = {};

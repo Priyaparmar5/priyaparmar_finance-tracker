@@ -5,13 +5,14 @@ import './index.css';
 
 import Unauth from './Services/Unauth'
 import ProtectedRoutes from './Services/ProtectedRoutes';
-
+import {TransactionContext} from "../src/context/TransactionContext"
 //import EditTransaction from './components/EditTransaction';
 
 
 export default function App()
 {
   return(
+    <TransactionContext>
     <BrowserRouter>
     <Routes>
     <Route path="/public/*" element={<Unauth/>} />
@@ -34,6 +35,7 @@ export default function App()
 
     </Routes>
     </BrowserRouter>
+    </TransactionContext>
   )
 }
 

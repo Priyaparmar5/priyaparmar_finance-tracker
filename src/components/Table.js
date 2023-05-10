@@ -5,8 +5,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Pagination from "./Pagination";
 import Search from "./Search";
+import { useTransactionContext } from "../context/TransactionContext";
 
 function Table(props) {
+  const {transactionData,setTransactionData} = useTransactionContext();
   const tabledData = props.tableRecords;
 
   const [state, setState] = useState({

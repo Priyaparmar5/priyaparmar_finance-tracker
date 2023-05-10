@@ -9,10 +9,12 @@ import Registration from './components/Registration';
 import Home from './components/Home';
 import Search from './components/Search';
 import Unauth from './Services/Unauth';
+import { TransactionContext } from './context/TransactionContext';
 
 function App() {
   return (
     <>
+    <TransactionContext.Provider>
     <Unauth/>
   <TransactionForm/>
   <Home/>
@@ -23,6 +25,7 @@ function App() {
   <ViewDetail/>
   <Pagination/>
   <EditTransaction/>
+  </TransactionContext.Provider>
   </>
   );
 }
