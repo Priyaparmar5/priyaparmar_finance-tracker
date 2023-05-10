@@ -2,13 +2,14 @@ import "../App.css";
 import { useForm } from 'react-hook-form';
 
 import { useState, useEffect, React } from "react";
+
 import { useNavigate, Link, useParams } from "react-router-dom";
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import  {yupResolver} from "@hookform/resolvers/yup"
+import { yupResolver } from "@hookform/resolvers/yup"
 import * as yup from 'yup'
 //import { FormField  } from "./FormFields/FormField";
 import {
-  monthYearList,fromAccountList,toAccountList,transactionTypeList
+  monthYearList, fromAccountList, toAccountList, transactionTypeList
 } from '../utils/constant';
 
 function TransactionForm() {
@@ -18,26 +19,37 @@ function TransactionForm() {
   const initialValues = {
     transactionDate: "",
     monthYear: "",
-    transactionType:"",
-    fromAccount:"",
-    toAccount:"",
+    transactionType: "",
+    fromAccount: "",
+    toAccount: "",
     amount: "",
     receipt: "",
     notes: "",
   };
+ 
+  const [formData, setFormData] = useState(initialValues);
+  const [imageUrl, setImageUrl] = useState('');
 
-  const schema =  yup.object().shape({
-    transactionDate : yup.string().required("transactionDate is required"),
-    monthYear:yup.string().required("Please select a product"),
-  //  monthYear : yup.string().required("monthYear is required"),
- //   monthYear:yup.array().required("Please select an hobby"),
-    transactionType : yup.string().required("Transaction type is required"),
-    fromAccount : yup.string().required("fromAccount is required"), 
-    toAccount : yup.string().required("toAccount is required"), 
-    amount : yup.string().required("amount is required"), 
-    notes : yup.string().required("notes is required"), 
-    receipt : yup.mixed().test('required',"please select file",value=>{return value && value.length})
-
+  const schema = yup.object().shape({
+    transactionDate: yup.string().required("transactionDate is required"),
+    monthYear: yup.string().required("Please select a product"),
+    //  monthYear : yup.string().required("monthYear is required"),
+    //   monthYear:yup.array().required("Please select an hobby"),
+    transactionType: yup.string().required("Transaction type is required"),
+    fromAccount: yup.string().required('from account is required').notOneOf([yup.ref('toAccount'), null], 'Both Values must be different'),
+    toAccount: yup.string().required("to account is required").notOneOf([yup.ref('fromAccount'), null], 'Both Values must be different'),
+  
+    amount: yup.string().required("amount is required"),
+    notes: yup.string().required("notes is required"),
+    receipt: yup.mixed().test('required', "please select file", value => { return value && value.length })
+      // .test('fileSize', 'File size is too large', (value) => {
+      //   if (!value) return true; // Don't validate if no file selected
+      //   return value && value[0].size <= 1048576; // 1 MB
+      // })
+      // .test('fileType', 'Only JPEG, PNG, and GIF files are allowed', (value) => {
+      //   if (!value) return true; // Don't validate if no file selected
+      //   return value &&['image/jpeg', 'image/png', 'image/gif'].includes(value[0].type);
+      // }),
   })
 
   const {
@@ -46,15 +58,21 @@ function TransactionForm() {
     handleSubmit,
     watch,
     setValue,
-    formState:{errors}
-  }=useForm({    mode: "onChange",
-  resolver: yupResolver(schema), defaultValues:initialValues});
+    formState: { errors }
+  } = useForm({
+    mode: "onChange",
+    resolver: yupResolver(schema), defaultValues:initialValues
+  });
 
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    setFormData(URL.createObjectURL(file));
+  };
 
   let date = new Date();
   let year = date.getFullYear();
 
-  const [formData, setFormData] = useState(initialValues);
+  //const [formData, setFormData] = useState(initialValues);
   const [isSubmit, setSubmit] = useState(false);
 
   const getBase64 = (file) => {
@@ -106,7 +124,7 @@ function TransactionForm() {
 
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
-    console.log(e.target,"heyy");
+    console.log(e.target, "heyy");
     setFormData((previousValues) => ({
       ...previousValues,
       [name]: value
@@ -118,73 +136,73 @@ function TransactionForm() {
   //   ...prevFormData,
   //   [name]: value
   // }));
-//
+  //
   const onChangeHandler1 = (event) => {
     const { name, value } = event.target;
-  //  setFormData({ ...formData, [name]: value });
-  let newErrors = { ...formError };
+    //  setFormData({ ...formData, [name]: value });
+    let newErrors = { ...formError };
 
-  switch (name) {
-    case 'transactionDate':
-      if (!value) {
-        newErrors[name] = 'transactionDate is required';
-      } else {
-        delete newErrors[name];
-      }
-      break;
-    case 'transactionType':
-      if (!value) {
-        newErrors[name] = 'transactionType is required';
-      }else {
-        delete newErrors[name];
-      }
-      break;
-    case 'monthYear':
+    switch (name) {
+      case 'transactionDate':
+        if (!value) {
+          newErrors[name] = 'transactionDate is required';
+        } else {
+          delete newErrors[name];
+        }
+        break;
+      case 'transactionType':
+        if (!value) {
+          newErrors[name] = 'transactionType is required';
+        } else {
+          delete newErrors[name];
+        }
+        break;
+      case 'monthYear':
         if (!value) {
           newErrors[name] = 'Month year is required';
         } else {
           delete newErrors[name];
         }
         break;
-    case 'fromAccount':
+      case 'fromAccount':
         if (!value) {
           newErrors[name] = 'From account is required';
         } else {
           delete newErrors[name];
         }
         break;
-    case 'toAccount':
-          if (!value) {
-            newErrors[name] = 'to account is required';
-          } else {
-            delete newErrors[name];
-          }
-          break;
-    case 'amount':
-          if (!value) {
-            newErrors[name] = 'amount is required';
-          } else {
-            delete newErrors[name];
-          }
-          break;
-    case 'reciept':
-          if (!value) {
-            newErrors[name] = 'receipt is required';
-          } else {
-            delete newErrors[name];
-          }
-          break;
-    case 'notes':
-          if (!value) {
-            newErrors[name] = 'notes is required';
-          } else {
-            delete newErrors[name];
-          }
-            break;
+      case 'toAccount':
+        if (!value) {
+          newErrors[name] = 'to account is required';
+        } else {
+          delete newErrors[name];
+        }
+        break;
+      case 'amount':
+        if (!value) {
+          newErrors[name] = 'amount is required';
+        } else {
+          delete newErrors[name];
+        }
+        break;
+      case 'reciept':
+        if (!value) {
+          newErrors[name] = 'receipt is required';
+        } else {
+          delete newErrors[name];
+        }
+        break;
+      case 'notes':
+        if (!value) {
+          newErrors[name] = 'notes is required';
+        } else {
+          delete newErrors[name];
+        }
+        break;
       default:
         break;
     }
-  
+
     setFormData((prevFormData) => ({
       ...prevFormData,
       [name]: value
@@ -192,12 +210,19 @@ function TransactionForm() {
     setFormError(newErrors);
 
   };
+//prefilled value
+  useEffect(() => {
+    Object.entries(formData).forEach(([key, value]) => {
+      setValue(key, value);
+    });
+  }, [formData, setValue]);
 
- // const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
+
+  // const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
   const navigate = useNavigate();
 
-  
- 
+
+
 
   const validateForm = (e) => {
     let err = {};
@@ -219,15 +244,15 @@ function TransactionForm() {
     // if (formData.receipt.size > 1024) {
     //   err.receipt = "size";
     // }
-    
+
 
     if (!formData.transactionDate) {
-          err.transactionDate = "Transaction date is required";
+      err.transactionDate = "Transaction date is required";
     }
 
     if (!formData.transactionType) {
-        err.transactionType = "Transaction type is required";
-    }    
+      err.transactionType = "Transaction type is required";
+    }
 
     if (formData.receipt === "") {
       err.receipt = "receipt is required";
@@ -294,8 +319,8 @@ function TransactionForm() {
     } else {
       setFormError({});
     }
- //   setFormError( err );
-    
+    //   setFormError( err );
+
   };
 
   console.log(formData.transactionDate, "formdddddddddd");
@@ -303,65 +328,67 @@ function TransactionForm() {
 
   const { id } = useParams();
   console.log({ id }, "param");
- 
- 
-  const onSubmit = async(e) => {
 
-   
-    const value = {...e};
-    const img =await getBase64(e.receipt[0]);
-    console.log(img,"imggggg");
-    e.receipt=img;
-    console.log(value,"eeeee");
-    const data = {...formData, transactionDate:value.transactionDate,
-    monthYear: value.monthYear,
-    transactionType:value.transactionType,
-    fromAccount:value.fromAccount,
-    toAccount:value.toAccount,
-    amount: value.amount,
-    receipt:img,
-    notes: value.notes,};
-      //setFormData(data);
+
+  const onSubmit = async (e) => {
+
+
+    const value = { ...e };
+    const img = await getBase64(e.receipt[0]);
+    console.log(img, "imggggg");
+    e.receipt = img;
+    console.log(value, "eeeee");
+    const data = {
+      ...formData, transactionDate: value.transactionDate,
+      monthYear: value.monthYear,
+      transactionType: value.transactionType,
+      fromAccount: value.fromAccount,
+      toAccount: value.toAccount,
+      amount: value.amount,
+      receipt: img,
+      notes: value.notes,
+    };
+    //setFormData(data);
     console.log(data, "datuuuu");
-   
-      console.log("hello");
-      if (localStorage.getItem("key")) {
-        const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
-        console.log("id", id);
-        if (id) {
-          for (const e in retrivedata) {
-            if (parseInt(retrivedata[e].id) === parseInt(id)) {
-              data["id"] = id;
-              retrivedata[e] = data;
-            }
+
+    console.log("hello");
+    if (localStorage.getItem("key")) {
+      const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
+      console.log("id", id);
+      if (id) {
+        for (const e in retrivedata) {
+          if (parseInt(retrivedata[e].id) === parseInt(id)) {
+            data["id"] = id;
+            retrivedata[e] = data;
           }
-          console.log(retrivedata, "data");
-          alert("update successfully");
-        } else {
-          console.log("in insert");
-          const previd = retrivedata[retrivedata.length - 1].id;
-          data["id"] = parseInt(previd) + 1;
-          retrivedata.push(data);
-          alert("insert successfully");
         }
-        localStorage.setItem("key", JSON.stringify(retrivedata));
+        console.log(retrivedata, "data");
+        alert("update successfully");
       } else {
-        data["id"] = 1;
-        localStorage.setItem("key", JSON.stringify([data]));
+        console.log("in insert");
+        const previd = retrivedata[retrivedata.length - 1].id;
+        data["id"] = parseInt(previd) + 1;
+        retrivedata.push(data);
+        alert("insert successfully");
       }
-      navigate("/viewData"); 
- 
+      localStorage.setItem("key", JSON.stringify(retrivedata));
+    } else {
+      data["id"] = 1;
+      localStorage.setItem("key", JSON.stringify([data]));
+    }
+    navigate("/viewData");
+
   };
   const doSomething = async (value) => {
     // do something with my select value onChange
     await trigger(['monthYear']) // Trigger validation on select
   };
 
-  const convert2base64 = file =>{
+  const convert2base64 = file => {
     const reader = new FileReader();
-    reader.onloadend = () =>{
-     const data = {...formData,receipt:reader.result.toString()};
-     setFormData(data);
+    reader.onloadend = () => {
+      const data = { ...formData, receipt: reader.result.toString() };
+      setFormData(data);
     }
   }
 
@@ -369,7 +396,7 @@ function TransactionForm() {
 
   useEffect(() => {
     for (const e in retrivedata) {
-      if (parseInt(retrivedata[e].id) === parseInt(id)) {   
+      if (parseInt(retrivedata[e].id) === parseInt(id)) {
         setFormData(retrivedata[e]);
         console.log(retrivedata[e], "retrieesfsd");
         break;
@@ -379,8 +406,8 @@ function TransactionForm() {
   return (
     <>
       <ul>
-          <Link to="/ViewData" className="add-btn">ViewData</Link>
-        
+        <Link to="/ViewData" className="add-btn">ViewData</Link>
+
       </ul>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="section">
@@ -394,14 +421,11 @@ function TransactionForm() {
               <input
                 type="date"
                 className="input"
-               
                 name="transactionDate"
-              //  value={formData.transactionDate}
-                onChange={onChangeHandler}
-                {...register("transactionDate", 
-              )}
+                {...register("transactionDate",
+                )}
               />
-              
+
               <span className="span1">{errors.transactionDate?.message}</span>
 
               <label>Month Year</label>
@@ -409,13 +433,10 @@ function TransactionForm() {
               <select
                 name="monthYear"
                 className="input"
-                 
-              //  value={formData.monthYear}
-                onChange={onChangeHandler}
                 {...register("monthYear")}
-                // onChange={(e) => doSomething(e.target.value)} // Using setValue
+              // onChange={(e) => doSomething(e.target.value)} // Using setValue
 
-               >
+              >
                 <option value="" disabled>
                   Select Month Year
                 </option>
@@ -427,15 +448,13 @@ function TransactionForm() {
                 ))}
               </select>
               <span className="span1">{errors.monthYear?.message}</span>
-             
+
 
               <label>Transaction Type</label>
               <select
                 name="transactionType"
                 className="input"
-              //  value={formData.transactionType}
-                  onChange={onChangeHandler}
-                  {...register("transactionType")}
+                {...register("transactionType")}
               >
                 <option value="" disabled>
                   Select transactionType
@@ -447,20 +466,18 @@ function TransactionForm() {
                   </option>
                 ))}
               </select>
-             
+
               <span className="span1">{errors.transactionType?.message}</span>
 
               <label>From Account</label>
               <select
-                
+
                 className="input"
                 name="fromAccount"
-              // value={formData.fromAccount}
-                 onChange={onChangeHandler}
                 {...register("fromAccount"
-                //  name:"fromAccount",
-             //    value:formData.fromAccount,
-              //    onChange={onChangeHandler}
+                  //  name:"fromAccount",
+                  //    value:formData.fromAccount,
+                  //    onChange={onChangeHandler}
                 )}
               >
                 <option value="" disabled>
@@ -473,7 +490,7 @@ function TransactionForm() {
                   </option>
                 ))}
               </select>
-             
+
               <span className="span1">{errors.fromAccount?.message}</span>
 
               <label>To Account</label>
@@ -481,7 +498,7 @@ function TransactionForm() {
               <select
                 name="toAccount"
                 className="input"
-             //  value={formData.toAccount}
+                defaultValue={initialValues.toAccount}
                 onChange={onChangeHandler}
                 {...register("toAccount")}
               >
@@ -503,39 +520,34 @@ function TransactionForm() {
                 type="number"
                 className="input"
                 name="amount"
-              // value={formData.amount}
-                onChange={onChangeHandler}
+              
                 {...register("amount")}
               />
               <span className="span1">{errors.amount?.message}</span>
 
               <label htmlFor="receipt">Receipt </label>
               <div>
-                  <>
-               
-                    <img
-                      src={formData.receipt}
-                      height={60}
-                      width={50}
-                      alt=""
-                    />
-                    
-                  </>
-                 
-             
-                  <input
-                    accept="image/jpg, image/png, image/jpeg"
-                    type="file"
-                    className="input"
-                    name="receipt"
-                    {...register("receipt")}
-
-                   //  value={formData.receipt}
-                   // onChange={handleImg}
+                <>
+                  <img
+                    src={formData.receipt}
+                    height={60}
+                    width={50}
+                    alt=""
                   />
-              
+              {/* {imageUrl && <img src={formData.receipt} alt="Preview" width="200" />} */}
+
+                </>
+                <input
+                  accept="image/jpg, image/png, image/jpeg"
+                  type="file"
+                  className="input"
+                  name="receipt"
+                  {...register("receipt")}
+
+                />
+
                 {/* <strong>{watch('receipt')[0].name}</strong> */}
-               
+
                 <span className="span1">{errors.receipt?.message}</span>
               </div>
 
@@ -545,8 +557,7 @@ function TransactionForm() {
                 name="notes"
                 maxLength="250"
                 {...register("notes")}
-             //  value={formData.notes}
-                onChange={onChangeHandler}
+                
               />
               <span className="span1">{errors.notes?.message}</span>
 
