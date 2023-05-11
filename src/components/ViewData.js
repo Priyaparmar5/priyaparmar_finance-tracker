@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 import { Link, Outlet, json, useNavigate } from "react-router-dom";
-import { useTransactionContext } from "../context/TransactionContext";
+import { useGlobalContext } from "../context/TransactionContext";
 import Table from "./Table";
 
 function ViewData() {
@@ -19,7 +19,7 @@ function ViewData() {
 
   const page = Math.ceil(myLocalStorageData.length / recordsPerPage);
 
-  const {transactionData,setTransactionData} = useTransactionContext();
+  const {transactionData,setTransactionData} = useGlobalContext();
 
   const handleLogout = (id) => {
     localStorage.removeItem("token");

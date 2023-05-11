@@ -1,22 +1,25 @@
 import "../App.css";
-import { useForm } from 'react-hook-form';
+import { useForm } from "react-hook-form";
 
 import { useState, useEffect, React, useContext } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
-import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
-import { yupResolver } from "@hookform/resolvers/yup"
-import { useTransactionContext } from "../context/TransactionContext";
-import * as yup from 'yup'
+import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useGlobalContext } from "../context/TransactionContext";
+import * as yup from "yup";
 //import { FormField  } from "./FormFields/FormField";
 import {
-  monthYearList, fromAccountList, toAccountList, transactionTypeList, staticValues
-} from '../utils/constant';
+  monthYearList,
+  fromAccountList,
+  toAccountList,
+  transactionTypeList,
+  staticValues,
+} from "../utils/constant";
 
 function TransactionForm() {
-
   const [formError, setFormError] = useState({});
 
-  const {transactionData,setTransactionData} = useTransactionContext();
+  const { transactionData, setTransactionData } = useGlobalContext();
 
   const initialValues = {
     transactionDate: "",
@@ -28,9 +31,9 @@ function TransactionForm() {
     receipt: "",
     notes: "",
   };
- 
+
   const [formData, setFormData] = useState(initialValues);
-  const [imageUrl, setImageUrl] = useState('');
+  const [imageUrl, setImageUrl] = useState("");
 
   const schema = yup.object().shape({
     transactionDate: yup.string().required("transactionDate is required"),
@@ -38,21 +41,32 @@ function TransactionForm() {
     //  monthYear : yup.string().required("monthYear is required"),
     //   monthYear:yup.array().required("Please select an hobby"),
     transactionType: yup.string().required("Transaction type is required"),
-    fromAccount: yup.string().required('from account is required').notOneOf([yup.ref('toAccount'),  ], 'Both Values must be different'),
-    toAccount: yup.string().required("to account is required").notOneOf([yup.ref('fromAccount'), null], 'Both Values must be different'),
-  
+    fromAccount: yup
+      .string()
+      .required("from account is required")
+      .notOneOf([yup.ref("toAccount")], "Both Values must be different"),
+    toAccount: yup
+      .string()
+      .required("to account is required")
+      .notOneOf(
+        [yup.ref("fromAccount"), null],
+        "Both Values must be different"
+      ),
+
     amount: yup.string().required("amount is required"),
     notes: yup.string().required("notes is required"),
-    receipt: yup.mixed().test('required', "please select file", value => { return value && value.length })
-      // .test('fileSize', 'File size is too large', (value) => {
-      //   if (!value) return true; // Don't validate if no file selected
-      //   return value && value[0].size <= 1048576; // 1 MB
-      // })
-      // .test('fileType', 'Only JPEG, PNG, and GIF files are allowed', (value) => {
-      //   if (!value) return true; // Don't validate if no file selected
-      //   return value &&['image/jpeg', 'image/png', 'image/gif'].includes(value[0].type);
-      // }),
-  })
+    receipt: yup.mixed().test("required", "please select file", (value) => {
+      return value && value.length;
+    }),
+    // .test('fileSize', 'File size is too large', (value) => {
+    //   if (!value) return true; // Don't validate if no file selected
+    //   return value && value[0].size <= 1048576; // 1 MB
+    // })
+    // .test('fileType', 'Only JPEG, PNG, and GIF files are allowed', (value) => {
+    //   if (!value) return true; // Don't validate if no file selected
+    //   return value &&['image/jpeg', 'image/png', 'image/gif'].includes(value[0].type);
+    // }),
+  });
 
   const {
     register,
@@ -60,18 +74,19 @@ function TransactionForm() {
     handleSubmit,
     watch,
     setValue,
-    formState: { errors }
+    formState: { errors },
   } = useForm({
     mode: "onChange",
-    resolver: yupResolver(schema), defaultValues:initialValues
+    resolver: yupResolver(schema),
+    defaultValues: initialValues,
   });
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     setFormData(URL.createObjectURL(file));
   };
-
   let date = new Date();
+
   let year = date.getFullYear();
 
   //const [formData, setFormData] = useState(initialValues);
@@ -129,7 +144,7 @@ function TransactionForm() {
     console.log(e.target, "heyy");
     setFormData((previousValues) => ({
       ...previousValues,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -145,58 +160,58 @@ function TransactionForm() {
     let newErrors = { ...formError };
 
     switch (name) {
-      case 'transactionDate':
+      case "transactionDate":
         if (!value) {
-          newErrors[name] = 'transactionDate is required';
+          newErrors[name] = "transactionDate is required";
         } else {
           delete newErrors[name];
         }
         break;
-      case 'transactionType':
+      case "transactionType":
         if (!value) {
-          newErrors[name] = 'transactionType is required';
+          newErrors[name] = "transactionType is required";
         } else {
           delete newErrors[name];
         }
         break;
-      case 'monthYear':
+      case "monthYear":
         if (!value) {
-          newErrors[name] = 'Month year is required';
+          newErrors[name] = "Month year is required";
         } else {
           delete newErrors[name];
         }
         break;
-      case 'fromAccount':
+      case "fromAccount":
         if (!value) {
-          newErrors[name] = 'From account is required';
+          newErrors[name] = "From account is required";
         } else {
           delete newErrors[name];
         }
         break;
-      case 'toAccount':
+      case "toAccount":
         if (!value) {
-          newErrors[name] = 'to account is required';
+          newErrors[name] = "to account is required";
         } else {
           delete newErrors[name];
         }
         break;
-      case 'amount':
+      case "amount":
         if (!value) {
-          newErrors[name] = 'amount is required';
+          newErrors[name] = "amount is required";
         } else {
           delete newErrors[name];
         }
         break;
-      case 'reciept':
+      case "reciept":
         if (!value) {
-          newErrors[name] = 'receipt is required';
+          newErrors[name] = "receipt is required";
         } else {
           delete newErrors[name];
         }
         break;
-      case 'notes':
+      case "notes":
         if (!value) {
-          newErrors[name] = 'notes is required';
+          newErrors[name] = "notes is required";
         } else {
           delete newErrors[name];
         }
@@ -207,24 +222,19 @@ function TransactionForm() {
 
     setFormData((prevFormData) => ({
       ...prevFormData,
-      [name]: value
+      [name]: value,
     }));
     setFormError(newErrors);
-
   };
-//prefilled value
+  //prefilled value
   useEffect(() => {
     Object.entries(formData).forEach(([key, value]) => {
       setValue(key, value);
     });
   }, [formData, setValue]);
 
-
   // const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
   const navigate = useNavigate();
-
-
-
 
   const validateForm = (e) => {
     let err = {};
@@ -246,7 +256,6 @@ function TransactionForm() {
     // if (formData.receipt.size > 1024) {
     //   err.receipt = "size";
     // }
-
 
     if (!formData.transactionDate) {
       err.transactionDate = "Transaction date is required";
@@ -291,8 +300,8 @@ function TransactionForm() {
 
     if (Object.keys(err).length === 0) {
       console.log("hello");
-      if (localStorage.getItem("key")) {
-        const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
+      if (transactionData) {
+        const retrivedata = transactionData || [];
         console.log("id", id);
         if (id) {
           for (const e in retrivedata) {
@@ -309,10 +318,12 @@ function TransactionForm() {
           retrivedata.push(data);
           alert("insert successfully");
         }
-        localStorage.setItem("key", JSON.stringify(retrivedata));
+        // localStorage.setItem("key", JSON.stringify(retrivedata));
+        setTransactionData(retrivedata);
       } else {
         data["id"] = 1;
-        localStorage.setItem("key", JSON.stringify([data]));
+        //  localStorage.setItem("key", JSON.stringify([data]));
+        setTransactionData([data]);
       }
       navigate("/viewData");
     }
@@ -322,7 +333,6 @@ function TransactionForm() {
       setFormError({});
     }
     //   setFormError( err );
-
   };
 
   console.log(formData.transactionDate, "formdddddddddd");
@@ -331,17 +341,22 @@ function TransactionForm() {
   const { id } = useParams();
   console.log({ id }, "param");
 
-
   const onSubmit = async (e) => {
-
-
     const value = { ...e };
     const img = await getBase64(e.receipt[0]);
     console.log(img, "imggggg");
     e.receipt = img;
+
+    // const dataFile = new FileReader();
+    // dataFile.addEventListener("load", () => {
+    //   const val = { ...formData, receipt: dataFile };
+    //   setFormData(val);
+    // });
+    // dataFile.readAsDataURL(img);
     console.log(value, "eeeee");
     const data = {
-      ...formData, transactionDate: value.transactionDate,
+      ...formData,
+      transactionDate: value.transactionDate,
       monthYear: value.monthYear,
       transactionType: value.transactionType,
       fromAccount: value.fromAccount,
@@ -373,19 +388,19 @@ function TransactionForm() {
         retrivedata.push(data);
         alert("insert successfully");
       }
-      setTransactionData(retrivedata)
+      setTransactionData(retrivedata);
       //localStorage.setItem("key", JSON.stringify(retrivedata));
     } else {
       data["id"] = 1;
-     // localStorage.setItem("key", JSON.stringify([data]));
-      setTransactionData([data])
+      // localStorage.setItem("key", JSON.stringify([data]));
+      setTransactionData([data]);
     }
     navigate("/viewData");
-    console.log("transactionnn",transactionData)
+    console.log("transactionnn", transactionData);
   };
- 
 
-  const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
+  //const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
+  const retrivedata = transactionData || [];
 
   useEffect(() => {
     for (const e in retrivedata) {
@@ -399,8 +414,9 @@ function TransactionForm() {
   return (
     <>
       <ul>
-        <Link to="/ViewData" className="add-btn">ViewData</Link>
-
+        <Link to="/ViewData" className="add-btn">
+          ViewData
+        </Link>
       </ul>
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="section">
@@ -415,8 +431,7 @@ function TransactionForm() {
                 type="date"
                 className="input"
                 name="transactionDate"
-                {...register("transactionDate",
-                )}
+                {...register("transactionDate")}
               />
 
               <span className="span1">{errors.transactionDate?.message}</span>
@@ -427,8 +442,7 @@ function TransactionForm() {
                 name="monthYear"
                 className="input"
                 {...register("monthYear")}
-              // onChange={(e) => doSomething(e.target.value)} // Using setValue
-
+                // onChange={(e) => doSomething(e.target.value)} // Using setValue
               >
                 <option value="" disabled>
                   Select Month Year
@@ -441,7 +455,6 @@ function TransactionForm() {
                 ))}
               </select>
               <span className="span1">{errors.monthYear?.message}</span>
-
 
               <label>Transaction Type</label>
               <select
@@ -464,10 +477,10 @@ function TransactionForm() {
 
               <label>From Account</label>
               <select
-
                 className="input"
                 name="fromAccount"
-                {...register("fromAccount"
+                {...register(
+                  "fromAccount"
                   //  name:"fromAccount",
                   //    value:formData.fromAccount,
                   //    onChange={onChangeHandler}
@@ -513,7 +526,6 @@ function TransactionForm() {
                 type="number"
                 className="input"
                 name="amount"
-              
                 {...register("amount")}
               />
               <span className="span1">{errors.amount?.message}</span>
@@ -521,14 +533,8 @@ function TransactionForm() {
               <label htmlFor="receipt">Receipt </label>
               <div>
                 <>
-                  <img
-                    src={formData.receipt}
-                    height={60}
-                    width={50}
-                    alt=""
-                  />
-              {/* {imageUrl && <img src={formData.receipt} alt="Preview" width="200" />} */}
-
+                  <img src={formData.receipt} height={60} width={50} alt="" />
+                  {/* {imageUrl && <img src={formData.receipt} alt="Preview" width="200" />} */}
                 </>
                 <input
                   accept="image/jpg, image/png, image/jpeg"
@@ -536,7 +542,8 @@ function TransactionForm() {
                   className="input"
                   name="receipt"
                   {...register("receipt")}
-
+                  //  onChange={handleImg}
+                  //value={formData.receipt}
                 />
 
                 {/* <strong>{watch('receipt')[0].name}</strong> */}
@@ -550,7 +557,6 @@ function TransactionForm() {
                 name="notes"
                 maxLength="250"
                 {...register("notes")}
-                
               />
               <span className="span1">{errors.notes?.message}</span>
 

@@ -5,10 +5,10 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import Pagination from "./Pagination";
 import Search from "./Search";
-import { useTransactionContext } from "../context/TransactionContext";
+import { useGlobalContext } from "../context/TransactionContext";
 
 function Table(props) {
-  const {transactionData,setTransactionData} = useTransactionContext();
+  const { transactionData, setTransactionData } = useGlobalContext();
   const tabledData = props.tableRecords;
 
   const [state, setState] = useState({
@@ -32,7 +32,6 @@ function Table(props) {
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
 
-
   const records = [...myLocalStorageData].slice(firstIndex, lastIndex);
   //const groupData = [...groupData].slice(firstIndex, lastIndex);
 
@@ -43,26 +42,40 @@ function Table(props) {
 
   let date = new Date();
   let year = date.getFullYear();
-  const months = [`Jan ${year}`, `Feb ${year}`, `Mar ${year}`, `Apr ${year}`, `May ${year}`, `Jun ${year}`, `Jul ${year}`, `Aug ${year}`, `Sep ${year}`, `Oct ${year}`, `Nov ${year}`, `Dec ${year}`]
+  const months = [
+    `Jan ${year}`,
+    `Feb ${year}`,
+    `Mar ${year}`,
+    `Apr ${year}`,
+    `May ${year}`,
+    `Jun ${year}`,
+    `Jul ${year}`,
+    `Aug ${year}`,
+    `Sep ${year}`,
+    `Oct ${year}`,
+    `Nov ${year}`,
+    `Dec ${year}`,
+  ];
 
-  const {id} = useParams();
+  const { id } = useParams();
 
   console.log(records, "records");
   console.log(lastIndex, "lrecords");
   console.log(firstIndex, "frecords");
 
   const handleDelete = (outIndex) => {
-    const val = myLocalStorageData.filter((data, inIndex) => {
-     
+    console.log(transactionData,"ttttt");
+    console.log(transactionData,"ttttt");
+    const val = transactionData.filter((data, inIndex) => {
       if (outIndex !== inIndex) {
-        console.log(outIndex,"out");
-        console.log(inIndex,"in");
+        console.log(outIndex, "out");
+        console.log(inIndex, "in");
         return data;
       }
     });
-   
-    setMyLocalStorageData(val);
-    localStorage.setItem("key", JSON.stringify(val));
+
+    setTransactionData(val);
+    //localStorage.setItem("key", JSON.stringify(val));
   };
 
   // const sortingMonth = (col) => {
@@ -86,69 +99,59 @@ function Table(props) {
   //   }
   // };
 
-  
   const sorting = (col) => {
-     setCurrentPage(1);
-    
-     if (col === "monthYear") {
-      let datanew = [...myLocalStorageData]
+    setCurrentPage(1);
 
-      if (order === 'ASC') {
-          console.log(months.indexOf('Jan 2023'));
-          datanew.sort((a, b) => {
-              return months.indexOf(a[col]) - months.indexOf(b[col])
-          })
-          setOrder("DSC");
-      } else if (order === 'DSC') {
-          datanew.sort((a, b) => {
+    if (col === "monthYear") {
+      let datanew = [...myLocalStorageData];
 
-              return months.indexOf(b[col]) - months.indexOf(a[col])
-          })
-          setOrder("ASC");
+      if (order === "ASC") {
+        console.log(months.indexOf("Jan 2023"));
+        datanew.sort((a, b) => {
+          return months.indexOf(a[col]) - months.indexOf(b[col]);
+        });
+        setOrder("DSC");
+      } else if (order === "DSC") {
+        datanew.sort((a, b) => {
+          return months.indexOf(b[col]) - months.indexOf(a[col]);
+        });
+        setOrder("ASC");
       }
-      setMyLocalStorageData(datanew)
-  }
-   else if (order === "ASC") {
+      setMyLocalStorageData(datanew);
+    } else if (order === "ASC") {
       const sorted = [...myLocalStorageData].sort((a, b) =>
         a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1
       );
       setMyLocalStorageData(sorted);
       setOrder("DSC");
-    }
-   else if (order === "DSC") {
+    } else if (order === "DSC") {
       const sorted = [...myLocalStorageData].sort((a, b) =>
         a[col].toLowerCase() < b[col].toLowerCase() ? 1 : -1
       );
       setMyLocalStorageData(sorted);
       setOrder("ASC");
-    }
-   else {
-      setMyLocalStorageData(tabledData)
-      setOrder(tabledData)
+    } else {
+      setMyLocalStorageData(tabledData);
+      setOrder(tabledData);
     }
   };
 
-
-  
   return (
     <div>
-      <Search myLocalStorageData={myLocalStorageData}
+      <Search
+        myLocalStorageData={myLocalStorageData}
         setMyLocalStorageData={setMyLocalStorageData}
         tabledData={tabledData}
         setCurrentPage={setCurrentPage}
         lastIndex={lastIndex}
         firstIndex={firstIndex}
       />
-    
 
-    
       {/* <button type="button" className="backbtn" onClick={() => navigate(-1)}>
         Go back
       </button> */}
 
-
       <div className="TableDesign">
-      
         <table className="table">
           <tr>
             {/* <th>id</th> */}
@@ -207,18 +210,17 @@ function Table(props) {
           ))}
         </table>
         <nav>
-
           <Pagination
             totalposts={myLocalStorageData.length}
             postPerPage={postPerPage}
             setCurrentPage={setCurrentPage}
             currentPage={currentPage}
-          // onPageChange={onPageChange}
+            // onPageChange={onPageChange}
           />
         </nav>
       </div>
     </div>
-  )
+  );
 }
 
-export default Table
+export default Table;
