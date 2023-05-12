@@ -1,7 +1,7 @@
 import "../App.css";
 import { useForm } from "react-hook-form";
 
-import { useState, useEffect, React, useContext } from "react";
+import { useState, useEffect, React, useContext ,useRef} from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -34,6 +34,8 @@ function TransactionForm() {
 
   const [formData, setFormData] = useState(initialValues);
   const [imageUrl, setImageUrl] = useState("");
+  const [imagePreview, setImagePreview] = useState(null);
+  const filePicekerRef = useRef(null);
 
   const schema = yup.object().shape({
     transactionDate: yup.string().required("transactionDate is required"),
@@ -100,6 +102,27 @@ function TransactionForm() {
       reader.readAsDataURL(file);
     });
   };
+
+  function previewFile(e) {
+    
+    const reader = new FileReader();
+    
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      reader.readAsDataURL(selectedFile);
+    }
+    // As the File loaded then set the stage as per the file type
+    reader.onload = (readerEvent) => {
+      if (selectedFile.type.includes("image")) {
+        setImagePreview(readerEvent.target.result);
+      }
+    };
+  }
+  function clearFiles() {
+    setImagePreview(null);
+    const img = {...formData,receipt:null}
+    setFormData(img);
+  }
 
   const handleImg = (event) => {
     let err = {};
@@ -229,9 +252,28 @@ function TransactionForm() {
   //prefilled value
   useEffect(() => {
     Object.entries(formData).forEach(([key, value]) => {
-      setValue(key, value);
+      if (key === "receipt" && value) {
+        const fileName = value.split("/").pop();
+      //  setValue(key, null, { shouldDirty: true });
+        setValue(key, { value: fileName });
+        setValue("receipt", value.name);
+      } else {
+        setValue(key, value);
+      }
+      //   setValue(key, value);
     });
+   setImagePreview(formData.receipt);
   }, [formData, setValue]);
+
+  //
+  // const handleSelectImage = (event) => {
+  //   const file = event.target.files[0];
+  //   const fileReader = new FileReader();
+  //   fileReader.addEventListener("load", () => {
+  //     setPreviewImage(fileReader.result);
+  //   });
+  //   fileReader.readAsDataURL(file);
+  // };
 
   // const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
   const navigate = useNavigate();
@@ -531,21 +573,35 @@ function TransactionForm() {
               <span className="span1">{errors.amount?.message}</span>
 
               <label htmlFor="receipt">Receipt </label>
+              <input type="button" className="btn" value="X" onClick={clearFiles}/>
               <div>
                 <>
-                  <img src={formData.receipt} height={60} width={50} alt="" />
+                {imagePreview != null && <img src={imagePreview} height={60} width={50} alt="" />}
+                  {/* <img src={formData.receipt} height={60} width={50} alt="" /> */}
                   {/* {imageUrl && <img src={formData.receipt} alt="Preview" width="200" />} */}
                 </>
+                
                 <input
                   accept="image/jpg, image/png, image/jpeg"
                   type="file"
                   className="input"
                   name="receipt"
                   {...register("receipt")}
-                  //  onChange={handleImg}
-                  //value={formData.receipt}
+                  onChange={previewFile}
+                 
+                  // onChange={handleImg}
+                  //   value={formData.receipt}
                 />
-
+              
+                {/* <input
+                  ref={filePicekerRef}
+                  accept="image/*, video/*"
+                  onChange={previewFile}
+                  type="file"
+                  hidden
+                />
+              
+                <button className="btn">x</button> */}
                 {/* <strong>{watch('receipt')[0].name}</strong> */}
 
                 <span className="span1">{errors.receipt?.message}</span>

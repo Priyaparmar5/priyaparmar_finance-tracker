@@ -8,8 +8,8 @@ import Search from "./Search";
 import { useGlobalContext } from "../context/TransactionContext";
 
 function Table(props) {
-  const { transactionData, setTransactionData } = useGlobalContext();
   const tabledData = props.tableRecords;
+  const { transactionData, setTransactionData } = useGlobalContext(tabledData);
 
   const [state, setState] = useState({
     transactionDate: "",
@@ -60,21 +60,23 @@ function Table(props) {
   const { id } = useParams();
 
   console.log(records, "records");
-  console.log(lastIndex, "lrecords");
-  console.log(firstIndex, "frecords");
+
 
   const handleDelete = (outIndex) => {
     console.log(transactionData,"ttttt");
-    console.log(transactionData,"ttttt");
-    const val = transactionData.filter((data, inIndex) => {
+    console.log(outIndex,"tttttn");
+    let val = myLocalStorageData.filter((data, inIndex) => {
       if (outIndex !== inIndex) {
         console.log(outIndex, "out");
         console.log(inIndex, "in");
-        return data;
+        console.log(data, "data");
+        
+        return data;  
       }
     });
 
-    setTransactionData(val);
+    setMyLocalStorageData(val);
+    console.log(val,"vallll");
     //localStorage.setItem("key", JSON.stringify(val));
   };
 
