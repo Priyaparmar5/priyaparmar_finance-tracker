@@ -9,6 +9,8 @@ import { useGlobalContext } from "../context/TransactionContext";
 
 function Table(props) {
   const tabledData = props.tableRecords;
+  //const tabledData = props.tableRecords;
+
   const { transactionData, setTransactionData } = useGlobalContext(tabledData);
 
   const [state, setState] = useState({
@@ -206,7 +208,7 @@ function Table(props) {
                 </Link>
               </td>
               <td>
-                <DeleteIcon onClick={() => handleDelete(index)}></DeleteIcon>
+                <DeleteIcon onClick={() => handleDelete(item.id)}></DeleteIcon>
               </td>
             </tr>
           ))}

@@ -11,7 +11,7 @@ export function TransactionContext({ children }) {
 
   return (
     <>
-      <UserContext.Provider value={{ transactionData, setTransactionData, groupData,setGroupData }}>
+      <UserContext.Provider value={{ transactionData, setTransactionData }}>
         {children}
       </UserContext.Provider>
     </>

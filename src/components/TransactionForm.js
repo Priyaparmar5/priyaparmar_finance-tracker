@@ -55,19 +55,29 @@ function TransactionForm() {
         "Both Values must be different"
       ),
 
-    amount: yup.string().required("amount is required"),
+    amount: yup.string().required("amount is required")
+    .test('number', 'number must be greater than 1', (value) => {
+      if (!value) return true; // Don't validate if no file selected
+      return value && value >= 1; // 1 MB
+    }),
     notes: yup.string().required("notes is required"),
     receipt: yup.mixed().test("required", "please select file", (value) => {
       return value && value.length;
+    })
+    .test('fileSize', 'File size is too large', (value) => {
+      if (value && value[0].size <= 1048576) return true; 
+      
+      if(typeof(value) === String && value.startswith("data:receipt"))
+      {
+        return true;
+      }
+      return false;
+    
+    })
+    .test('fileType', 'Only JPEG, PNG, and GIF files are allowed', (value) => {
+      if (!value) return true; 
+      return value &&['image/jpeg', 'image/png', 'image/gif'].includes(value[0].type);
     }),
-    // .test('fileSize', 'File size is too large', (value) => {
-    //   if (!value) return true; // Don't validate if no file selected
-    //   return value && value[0].size <= 1048576; // 1 MB
-    // })
-    // .test('fileType', 'Only JPEG, PNG, and GIF files are allowed', (value) => {
-    //   if (!value) return true; // Don't validate if no file selected
-    //   return value &&['image/jpeg', 'image/png', 'image/gif'].includes(value[0].type);
-    // }),
   });
 
   const {
@@ -252,15 +262,16 @@ function TransactionForm() {
   //prefilled value
   useEffect(() => {
     Object.entries(formData).forEach(([key, value]) => {
-      if (key === "receipt" && value) {
-        const fileName = value.split("/").pop();
-      //  setValue(key, null, { shouldDirty: true });
-        setValue(key, { value: fileName });
-        setValue("receipt", value.name);
-      } else {
-        setValue(key, value);
-      }
+      // if (key === "receipt" && value) {
+      //   const fileName = value.split("/").pop();
+      //   setValue(key, null, { shouldDirty: true });
+      //   setValue(key, { value: fileName });
+      //   setValue("receipt", value.name);
+      //   console.log();
+      // } else {
       //   setValue(key, value);
+      // }
+    setValue(key, value);
     });
    setImagePreview(formData.receipt);
   }, [formData, setValue]);
@@ -282,22 +293,7 @@ function TransactionForm() {
     let err = {};
     const MIN_FILE_SIZE = 1024;
 
-    // const fileExtension = formData.receipt.split(".").at(-1);
-    // const allowedFileTypes = ["jpg", "png", "jpeg"];
-    // if (!allowedFileTypes.includes(fileExtension)) {
-    //     //indow.alert(`File does not support. Files type must be ${allowedFileTypes.join(", ")}`);
-    //     return false;
-    //     err.receipt = "file does not support other extension";
-
-    // }
-
-    // const fileSizeKiloBytes = formData.receipt.size / 1024;
-    //console.log(formData.receipt.size, "sizeeeeee");
-    //console.log(fileSizeKiloBytes, "filesizekb..");
-
-    // if (formData.receipt.size > 1024) {
-    //   err.receipt = "size";
-    // }
+ 
 
     if (!formData.transactionDate) {
       err.transactionDate = "Transaction date is required";
@@ -385,10 +381,15 @@ function TransactionForm() {
 
   const onSubmit = async (e) => {
     const value = { ...e };
+    
+    const isImg64 = typeof e.receipt === "string";
+
+    if(!isImg64){
     const img = await getBase64(e.receipt[0]);
     console.log(img, "imggggg");
     e.receipt = img;
-
+    }
+    
     // const dataFile = new FileReader();
     // dataFile.addEventListener("load", () => {
     //   const val = { ...formData, receipt: dataFile };
@@ -404,7 +405,7 @@ function TransactionForm() {
       fromAccount: value.fromAccount,
       toAccount: value.toAccount,
       amount: value.amount,
-      receipt: img,
+      receipt: value.receipt,
       notes: value.notes,
     };
     //setFormData(data);
