@@ -288,6 +288,7 @@ function AddTransaction() {
       // } else {
       //   setValue(key, value);
       // }
+     
       setValue(key, value);
     });
     setImagePreview(formData.receipt);
@@ -442,9 +443,9 @@ function AddTransaction() {
         //   }
         //
         // }
-        const dispatchData = dispatch(updateTransaction({ id: id, data }));
+        const dispatchData = dispatch(updateTransaction({ id: data.id, data }));
 
-        setFormData(dispatchData);
+        //setFormData(data);
         console.log(formData,"formdataaa");
         console.log(dispatchData, "dispatchData");
         console.log(id, "dataaaaaid");
