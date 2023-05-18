@@ -1,15 +1,19 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 import { Link, Outlet, json, useNavigate, useParams } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux";
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Pagination from "../components/Pagination";
 import Search from "../components/Search";
+import { deleteTransaction } from "../redux/ducks/TransactionReducer";
 //import { useGlobalContext } from "../context/TransactionContext";
 
 function Table(props) {
   const tabledData = props.tableRecords;
   //const tabledData = props.tableRecords;
-
+  const dispatch = useDispatch();
+  const users = useSelector((state) => state.transactions.value);
   //const { transactionData, setTransactionData } = useGlobalContext(tabledData);
 
   const [state, setState] = useState({
@@ -62,45 +66,37 @@ function Table(props) {
 
   console.log(records, "records");
 
-
-  const handleDelete = (outIndex) => {
-    //console.log(transactionData,"ttttt");
-    console.log(outIndex,"tttttn");
-    let val = myLocalStorageData.filter((data, inIndex) => {
-      if (outIndex !== inIndex) {
-        console.log(outIndex, "out");
-        console.log(inIndex, "in");
-        console.log(data, "data");
-        
-        return data;  
-      }
+  const showToastMessage = () => {
+    toast.success('Deleted Successfully !', {
+        position: toast.POSITION.TOP_CENTER
     });
-
-    setMyLocalStorageData(val);
-    console.log(val,"vallll");
-    //localStorage.setItem("key", JSON.stringify(val));
   };
 
-  // const sortingMonth = (col) => {
-  //   if (col === "monthYear") {
-  //     const sortedData = [...myLocalStorageData];
+  // const handleDelete = (outIndex) => {
+  //   //console.log(transactionData,"ttttt");
+  //   console.log(outIndex,"tttttn");
+  //   let val = myLocalStorageData.filter((data, inIndex) => {
+  //     if (outIndex !== inIndex) {
+  //       console.log(outIndex, "out");
+  //       console.log(inIndex, "in");
+  //       console.log(data, "data");
+        
+  //       return data;  
+  //     }
+  //   });
 
-  //     sortedData.sort((a, b) => {
-  //       const dateA = new Date(a["monthYear"]);
-  //       const dateB = new Date(b["monthYear"]);
-  //       if (dateA < dateB) {
-  //         return order === "asc" ? -1 : 1;
-  //       }
-  //       if (dateA > dateB) {
-  //         return order === "asc" ? 1 : -1;
-  //       }
-  //       return 0;
-  //     });
-
-  //     //setMyLocalStorageData(sortedData);
-  //     //setOrder("DSC");
-  //   }
+  //   setMyLocalStorageData(val);
+  //   console.log(val,"vallll");
+  //   //localStorage.setItem("key", JSON.stringify(val));
   // };
+
+    const handleDelete = (id) => {
+      console.log(id,"idddd");
+      const dlt = dispatch(deleteTransaction({id}))
+      console.log(dlt,"dltttt");
+   // setMyLocalStorageData(dlt)
+   
+};
 
   const sorting = (col) => {
     setCurrentPage(1);
@@ -170,7 +166,7 @@ function Table(props) {
             <th>Edit</th>
             <th>Delete</th>
           </tr>
-
+          <ToastContainer />
           {records.map((item, index) => (
             <tr key={index}>
               {/* <td>{item.id}</td> */}
@@ -192,7 +188,7 @@ function Table(props) {
               <td>
                 {" "}
                 <Link
-                  to={`/transaction/viewDetail/${item.id}`}
+                  to={`/view/${item.id}`}
                   //state={item}
                   className="post"
                 >
@@ -206,7 +202,8 @@ function Table(props) {
                  Edit
                 </Link>
               </td>
-              <td>
+             
+              <td onClick={showToastMessage}>
                 <button className="post" onClick={() => handleDelete(item.id)}>delete</button>
               </td>
             </tr>

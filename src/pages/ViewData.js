@@ -12,6 +12,7 @@ function ViewData() {
   const [myLocalStorageData, setMyLocalStorageData] = useState([]);
   const [groupData, setGroupData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
+  const [grpVal,setGrpVal] = useState("");
   
   const recordsPerPage = 3;
   const lastIndex = currentPage * recordsPerPage;
@@ -32,6 +33,10 @@ function ViewData() {
 
     navigate("/public/login");
   };
+
+//   useEffect(() => {
+//     handleGroupChange(grpVal)
+// }, []);
 
   // const handleDelete = (outIndex) => {
   //   console.log(transactionData,"ttttt");
@@ -88,25 +93,41 @@ function ViewData() {
 
   const handleGroupChange = (e) => {
     const resultdata = {};
-    const val = e.target.value;
-    console.log(val, "valll");
+   // const val = e.target.value;
+    console.log(e.target.value, "grpval");
     const arr = [...localData];
-    console.log(arr, "arrrr");
+    console.log(arr, "grparrrr");
 
-    if (val) {
+    if(e.target){
+    setGrpVal(e.target.value);
+    if (e.target.value) {
       arr.forEach((item) => {
-        const result = item[val];
-        console.log(result, "datataaaaa");
+        const result = item[e.target.value];
+        console.log(result, "grpatataaaaa");
         resultdata[result] = resultdata[result] ?? [];
         resultdata[result].push(item);
         //resultdata = item[val]
-        console.log(resultdata[result], "resulttt");
+        console.log(resultdata[result], "grpresulttt");
       });
       setGroupData(resultdata);
     } else {
       setGroupData([]);
     }
-    console.log(resultdata, "resulttttt");
+  }
+  else{
+    if(e){
+      arr.forEach((item) => {
+        const result = item[e];
+        console.log(result, "grpatataaaaa");
+        resultdata[result] = resultdata[result] ?? [];
+        resultdata[result].push(item);
+        //resultdata = item[val]
+        console.log(resultdata[result], "grpresulttt");
+      });
+      setGroupData(resultdata);
+    }
+  }
+    console.log(resultdata, "grpresulttttt");
   };
 
   console.log(Object.keys(groupData).length);

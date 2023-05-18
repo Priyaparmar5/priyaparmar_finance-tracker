@@ -8,7 +8,6 @@ import {
 } from "../redux/ducks/TransactionReducer";
 import { useState, useEffect, React, useContext } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
-//import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { yupResolver } from "@hookform/resolvers/yup";
 //import { useGlobalContext } from "../context/TransactionContext";
 import * as yup from "yup";
@@ -70,31 +69,37 @@ function AddTransaction() {
         return value && value >= 1; // 1 MB
       }),
     notes: yup.string().required("notes is required"),
-    receipt: yup.mixed()
-    .test("required", "please select file", (value) => {
-      return value && value.length;
-    })
-    .test("fileSize", "File size is too large", (value) => {
-      if (value && value[0].size <= 1048576) {return true;}
+    receipt: yup
+      .mixed()
+      .test("required", "please select file", (value) => {
+        return value && value.length;
+      })
+      .test("fileSize", "File size is too large", (value) => {
+        if (value && value[0].size <= 1048576) {
+          return true;
+        }
 
-      if (typeof value === 'string' && value.startsWith("data:image")) {
-        return true;
-      }
-      return false;
-    })
-    .test(
-      "fileType",
-      "Only JPEG, PNG, and GIF files are allowed",
-      (value) => {
-        if(value && ["image/jpeg", "image/png", "image/gif"].includes(value[0].type)){
+        if (typeof value === "string" && value.startsWith("data:image")) {
+          return true;
+        }
+        return false;
+      })
+      .test(
+        "fileType",
+        "Only JPEG, PNG, and GIF files are allowed",
+        (value) => {
+          if (
+            value &&
+            ["image/jpeg", "image/png", "image/gif"].includes(value[0].type)
+          ) {
             return true;
           }
-          if (typeof value === 'string' && value.startsWith("data:image")) {
+          if (typeof value === "string" && value.startsWith("data:image")) {
             return true;
           }
           return false;
-      }
-    ),
+        }
+      ),
   });
 
   const {
@@ -288,7 +293,7 @@ function AddTransaction() {
       // } else {
       //   setValue(key, value);
       // }
-     
+
       setValue(key, value);
     });
     setImagePreview(formData.receipt);
@@ -400,15 +405,15 @@ function AddTransaction() {
     // dispatch(
     //   addTransaction({ id: users[users.length - 1].id + 1, initialValues })
     // );
-   // const value = { ...e };
+    // const value = { ...e };
 
     const isImg64 = typeof e.receipt === "string";
 
-    // if (!isImg64) {
-    //   const img = await getBase64(e.receipt[0]);
-    //   console.log(img, "imggggg");
-    //   e.receipt = img;
-    // }
+    if (!isImg64) {
+      const img = await getBase64(e.receipt[0]);
+      console.log(img, "imggggg");
+      e.receipt = img;
+    }
     // const img = await getBase64(e.receipt[0]);
     // console.log(img, "imggggg");
     // e.receipt = img;
@@ -446,7 +451,7 @@ function AddTransaction() {
         const dispatchData = dispatch(updateTransaction({ id: data.id, data }));
 
         //setFormData(data);
-        console.log(formData,"formdataaa");
+        console.log(formData, "formdataaa");
         console.log(dispatchData, "dispatchData");
         console.log(id, "dataaaaaid");
         alert("update successfully");

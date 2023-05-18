@@ -29,12 +29,13 @@ const TransactionReducer = createSlice({
       // if (uu) {
       //   return state.value.filter((f) => f.id !== id);
       // }
-      const id = action.payload;
-      console.log(id,"iddddddss");
-      state.value = state.value.filter(
-        (transaction) => transaction.id !== id
+     
+     // console.log(id,"iddddddss");
+      const val= state.value.filter(
+        (transaction) => transaction.id !== action.payload.id
       );
-    console.log(state.transactions,"stateee");
+      state.value = val;
+    console.log(action,"stateee");
     },
     updateTransaction(state, action) {
        
