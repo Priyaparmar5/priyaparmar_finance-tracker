@@ -86,3 +86,13 @@ export const staticValues = [
     notes: "nvbvv",
     }
 ];
+
+export const staticData =[
+  
+{name: "siya ", email: "siya12@gmail.com", password: "siya1"},
+
+ 
+{name: "priya", email: "priyaparmar5501@gmail.com", password: "priya"},
+ 
+{name: "riya", email: "riyajain123@gmail.com", password: "riyajain"}
+]

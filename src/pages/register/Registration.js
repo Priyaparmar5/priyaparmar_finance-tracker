@@ -1,10 +1,12 @@
 import { useState,useEffect } from "react";
 import { useForm } from 'react-hook-form'
 import { Link, useNavigate,  } from 'react-router-dom'
+import { useGlobalContext } from "../../context/TransactionContext";
 import  {yupResolver} from "@hookform/resolvers/yup"
 import * as yup from 'yup'
 function Registration() {
 
+  
   const navigate = useNavigate();
   const initialValues = {
     name: "",
@@ -27,6 +29,8 @@ function Registration() {
   const [input, setInput] = useState(initialValues);
   const [values, setValues] = useState();
   const [formError, setFormError] = useState({});
+  const { registerData, setRegisterData } = useGlobalContext();
+
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
@@ -37,7 +41,7 @@ function Registration() {
     name : yup.string().required("name is required"),
     email : yup.string().email().required("Email is required")
     .test("email", "Email already exists", function (value) {
-      const storedData = JSON.parse(localStorage.getItem("user")) || [];
+      const storedData = registerData|| [];
       return (
         storedData.filter((data) => data.email === value).length === 0 || !value
       );
@@ -68,7 +72,8 @@ function Registration() {
 
   const registerValidation = (values) => {
     const errors = {};
-    const existUser =JSON.parse(localStorage.getItem("user"));
+   // const existUser =JSON.parse(localStorage.getItem("user"));
+   const existUser = registerData;
 
     if (!input.name.trim()) {
       errors.name = "Name is required";
@@ -105,13 +110,15 @@ function Registration() {
     
       if (localStorage.getItem("user")) {
 
-        const getdata = JSON.parse(localStorage.getItem("user"));
+        const getdata = registerData;
         console.log("retrieve data", getdata);
         getdata.push(input);
-
-        localStorage.setItem("user", JSON.stringify(getdata));
+        setRegisterData(getdata);
+        //localStorage.setItem("user", JSON.stringify(getdata));
       } else {
-        localStorage.setItem("user", JSON.stringify([input]));
+        setRegisterData([input]);
+
+      //  localStorage.setItem("user", JSON.stringify([input]));
       }
       navigate("/login")
     }
@@ -134,9 +141,10 @@ function Registration() {
         email: data.email,
         password: data.password,
       }
-      const val = JSON.parse(localStorage.getItem("user")) || [];
+      const val = registerData|| [];
       val.push(storedData);
-      localStorage.setItem("user", JSON.stringify(val));
+      setRegisterData(val);
+     // localStorage.setItem("user", JSON.stringify(val));
       //    console.log(schema,"isvalidd");
   //  if(Object.keys(errors).length === 0) {
 
