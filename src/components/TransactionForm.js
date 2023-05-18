@@ -317,7 +317,7 @@ function TransactionForm() {
                 name="transactionDate"
                 value={formData.transactionDate}
                 onChange={onChangeHandler}
-                {...register("transactionDate")}
+               // {...register("transactionDate")}
               />
               
               <span className="span1">{formError.transactionDate}</span>
@@ -349,7 +349,7 @@ function TransactionForm() {
                 className="input"
                 value={formData.transactionType}
                   onChange={onChangeHandler}
-                  {...register("transactionType")}
+               //   {...register("transactionType")}
               >
                 <option value="" disabled>
                   Select transactionType
@@ -370,7 +370,7 @@ function TransactionForm() {
                 className="input"
                 value={formData.fromAccount}
                 onChange={onChangeHandler}
-                {...register("fromAccount")}
+              //  {...register("fromAccount")}
               >
                 <option value="" disabled>
                   Select From Account
@@ -392,7 +392,7 @@ function TransactionForm() {
                 className="input"
                 value={formData.toAccount}
                 onChange={onChangeHandler}
-                {...register("toAccount")}
+              //  {...register("toAccount")}
               >
                 <option value="" disabled>
                   Select To Account
@@ -414,7 +414,7 @@ function TransactionForm() {
                 name="amount"
                 value={formData.amount}
                 onChange={onChangeHandler}
-                {...register("amount")}
+              //  {...register("amount")}
               />
               <span className="span1">{formError.amount}</span>
 
@@ -435,7 +435,7 @@ function TransactionForm() {
                     type="file"
                     className="input"
                     name="receipt"
-                    {...register("receipt")}
+                  //  {...register("receipt")}
 
                     // value={formData.receipt}
                     onChange={handleImg}
@@ -448,7 +448,7 @@ function TransactionForm() {
                 className="input"
                 name="notes"
                 maxLength="250"
-                {...register("notes")}
+              //  {...register("notes")}
                 value={formData.notes}
                 onChange={onChangeHandler}
               />
