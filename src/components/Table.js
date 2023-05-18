@@ -54,6 +54,7 @@ function Table(props) {
     });
     setMyLocalStorageData(val);
     localStorage.setItem("key", JSON.stringify(val));
+    alert("Deleted successfully")
   };
 
   // const sortingMonth = (col) => {
