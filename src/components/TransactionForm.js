@@ -3,7 +3,6 @@ import { useForm } from "react-hook-form";
 
 import { useState, useEffect, React, useContext ,useRef} from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
-import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useGlobalContext } from "../context/TransactionContext";
 import * as yup from "yup";
@@ -64,20 +63,27 @@ function TransactionForm() {
     receipt: yup.mixed().test("required", "please select file", (value) => {
       return value && value.length;
     })
-    .test('fileSize', 'File size is too large', (value) => {
-      if (value && value[0].size <= 1048576) return true; 
-      
-      if(typeof(value) === String && value.startswith("data:receipt"))
-      {
+    .test("fileSize", "File size is too large", (value) => {
+      if (value && value[0].size <= 1048576) {return true;}
+
+      if (typeof value === 'string' && value.startsWith("data:image")) {
         return true;
       }
       return false;
-    
     })
-    .test('fileType', 'Only JPEG, PNG, and GIF files are allowed', (value) => {
-      if (!value) return true; 
-      return value &&['image/jpeg', 'image/png', 'image/gif'].includes(value[0].type);
-    }),
+    .test(
+      "fileType",
+      "Only JPEG, PNG, and GIF files are allowed",
+      (value) => {
+        if(value && ["image/jpeg", "image/png", "image/gif"].includes(value[0].type)){
+            return true;
+          }
+          if (typeof value === 'string' && value.startsWith("data:image")) {
+            return true;
+          }
+          return false;
+      }
+    ),
   });
 
   const {

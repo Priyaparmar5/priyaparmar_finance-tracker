@@ -19,6 +19,7 @@ function ViewData() {
   //const groupData = [...groupData].slice(firstIndex, lastIndex);
 
   const page = Math.ceil(myLocalStorageData.length / recordsPerPage);
+  const [grpVal,setGrpVal] = useState("");
 
   const {transactionData,setTransactionData} = useGlobalContext();
 
@@ -27,6 +28,10 @@ function ViewData() {
 
     navigate("/public/login");
   };
+
+  useEffect(() => {
+    setTransactionData(transactionData);
+}, [transactionData]);
 
   // const handleDelete = (outIndex) => {
   //   console.log(transactionData,"ttttt");
@@ -45,33 +50,47 @@ function ViewData() {
   //   console.log(val,"vallll");
   //   //localStorage.setItem("key", JSON.stringify(val));
   // };
+
+//   useEffect(() => {
+//     handleGroupChange(grpVal)
+// }, []);
+
   const {id} = useParams();
 
   const handleDelete = (id) => {
     let updatedData = [];
     if (id) {
-      if (!myLocalStorageData) {
-        updatedData = transactionData.filter(obj => obj != id);
+
+      console.log(id,">");
+//     const deleteData = [...myLocalStorageData];
+//     const deletedData = deleteData.filter((value) => parseInt(value.id) !== parseInt(id));
+//     console.log(deletedData, ">>>>>>>>");
+//     setMyLocalStorageData(deletedData);
+      if (myLocalStorageData) {
+        const deleteData = [...transactionData];
+        console.log(deleteData,"deleteDddd");
+        updatedData = deleteData.filter((obj) => parseInt(obj.id) !== parseInt(id));
+        console.log(updatedData, ">>>>>>>>");
         setTransactionData(updatedData);
       }
       else {
         Object.keys(groupData).forEach((groupCol) => {
           updatedData = updatedData.concat(
-            groupData[groupCol] = groupData[groupCol].filter((item) => item.id != id)
+            groupData[groupCol] = groupData[groupCol].filter((item) => item.id !== id)
           )
         });
         setGroupData((prevGrpData) => {
           const newGrpId = {};
           Object.keys(prevGrpData).forEach((groupCol) => {
-            newGrpId[groupCol] = prevGrpData[groupCol].filter((item) => item.id != id)
+            newGrpId[groupCol] = prevGrpData[groupCol].filter((item) => item.id !== id)
           });
           return newGrpId;
         });
-        setMyLocalStorageData(updatedData);
+        setGroupData(updatedData);
       }
     }
     else {
-      updatedData = [...myLocalStorageData]
+      updatedData = [...groupData]
     }
     setTransactionData(updatedData)
   }
@@ -85,7 +104,8 @@ function ViewData() {
     console.log(val, "valll");
     const arr = [...localData];
     console.log(arr, "arrrr");
-
+    if(e.target){
+      setGrpVal(e.target.value)
     if (val) {
       arr.forEach((item) => {
         const result = item[val];
@@ -99,6 +119,20 @@ function ViewData() {
     } else {
       setGroupData([]);
     }
+  }
+  else{
+    if(e){
+      arr.forEach((item) => {
+        const result = item[e];
+        console.log(result, "grpatataaaaa");
+        resultdata[result] = resultdata[result] ?? [];
+        resultdata[result].push(item);
+        //resultdata = item[val]
+        console.log(resultdata[result], "grpresulttt");
+      });
+      setGroupData(resultdata);
+    }
+  }
     console.log(resultdata, "resulttttt");
   };
 
@@ -133,7 +167,7 @@ function ViewData() {
 
             {groupData.length === 0 ? (
               <>
-                <Table tableRecords={localData} handleDelete={handleDelete}  />
+                <Table tableRecords={localData}  handleDelete={handleDelete}/>
                 <br></br>
               </>
             ) : (
@@ -142,7 +176,7 @@ function ViewData() {
                   {data !== "undefined" ? (
                     <>
                       <h3> Group by: {data}</h3>
-                      <Table tableRecords={groupData[data]} handleDelete={handleDelete}/>
+                      <Table tableRecords={groupData[data]}  handleDelete={handleDelete} />
                     </>
                   ) : null}
                 </>

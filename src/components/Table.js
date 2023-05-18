@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 import { Link, Outlet, json, useNavigate, useParams } from "react-router-dom";
-import DeleteIcon from "@mui/icons-material/Delete";
-import EditIcon from "@mui/icons-material/Edit";
 import Pagination from "./Pagination";
 import Search from "./Search";
 import { useGlobalContext } from "../context/TransactionContext";
 
 function Table(props) {
   const tabledData = props.tableRecords;
+  const handleDelete = props.handleDelete;
   //const tabledData = props.tableRecords;
 
-  const { transactionData, setTransactionData } = useGlobalContext(tabledData);
+  const { transactionData, setTransactionData } = useGlobalContext();
 
   const [state, setState] = useState({
     transactionDate: "",
@@ -33,6 +32,7 @@ function Table(props) {
   const recordsPerPage = 3;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
+  const [grpVal,setGrpVal] = useState("");
 
   const records = [...myLocalStorageData].slice(firstIndex, lastIndex);
   //const groupData = [...groupData].slice(firstIndex, lastIndex);
@@ -64,44 +64,34 @@ function Table(props) {
   console.log(records, "records");
 
 
-  const handleDelete = (outIndex) => {
-    console.log(transactionData,"ttttt");
-    console.log(outIndex,"tttttn");
-    let val = myLocalStorageData.filter((data, inIndex) => {
-      if (outIndex !== inIndex) {
-        console.log(outIndex, "out");
-        console.log(inIndex, "in");
-        console.log(data, "data");
+  // const handleDelete = (outIndex) => {
+  //   console.log(transactionData,"ttttt");
+  //   console.log(outIndex,"tttttn");
+  //   let val = myLocalStorageData.filter((data, inIndex) => {
+  //     if (outIndex !== inIndex) {
+  //       console.log(outIndex, "out");
+  //       console.log(inIndex, "in");
+  //       console.log(data, "data");
         
-        return data;  
-      }
-    });
+  //       return data;  
+  //     }
+  //   });
 
-    setMyLocalStorageData(val);
-    console.log(val,"vallll");
-    //localStorage.setItem("key", JSON.stringify(val));
-  };
-
-  // const sortingMonth = (col) => {
-  //   if (col === "monthYear") {
-  //     const sortedData = [...myLocalStorageData];
-
-  //     sortedData.sort((a, b) => {
-  //       const dateA = new Date(a["monthYear"]);
-  //       const dateB = new Date(b["monthYear"]);
-  //       if (dateA < dateB) {
-  //         return order === "asc" ? -1 : 1;
-  //       }
-  //       if (dateA > dateB) {
-  //         return order === "asc" ? 1 : -1;
-  //       }
-  //       return 0;
-  //     });
-
-  //     //setMyLocalStorageData(sortedData);
-  //     //setOrder("DSC");
-  //   }
+  //   setMyLocalStorageData(val);
+  //   console.log(val,"vallll");
+  //   //localStorage.setItem("key", JSON.stringify(val));
   // };
+
+
+//   const handleDelete = (id) => {
+//     // differ();
+//     console.log(id,">");
+//     const cloneDelete = [...myLocalStorageData];
+//     const deletedData = cloneDelete.filter((value) => parseInt(value.id) !== parseInt(id));
+//     console.log(deletedData, ">>>>>>>>");
+//     setMyLocalStorageData(deletedData);
+//     // setCurrentPage(1);
+// };
 
   const sorting = (col) => {
     setCurrentPage(1);
@@ -204,11 +194,11 @@ function Table(props) {
               <td>
                 {" "}
                 <Link to={`/add/${item.id}`} className="post">
-                  <EditIcon></EditIcon>
+                  Edit
                 </Link>
               </td>
               <td>
-                <DeleteIcon onClick={() => handleDelete(item.id)}></DeleteIcon>
+                <button   className="post" onClick={() => handleDelete(item.id)}>Delete</button>
               </td>
             </tr>
           ))}
