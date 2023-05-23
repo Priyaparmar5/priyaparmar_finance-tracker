@@ -30,21 +30,6 @@ function Login() {
 }
 
 
-//   const generate_token=(length)=>{
-//     //edit the token allowed characters
-//     var a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".split("");
-//     var b = [];  
-//     for (var i=0; i<length; i++) {
-//         var j = (Math.random() * (a.length-1)).toFixed(0);
-//         b[i] = a[j];
-//     }
-//     input['token'] = b.join("")
-   
-  
-//     //return b.join("");
-   
-// }
-
   const handleLogin = (e) =>{
   
       e.preventDefault();
@@ -66,8 +51,6 @@ function Login() {
                 flag = true
                 break;
 
-            }else{
-                alert("Please enter valid email and password")
             }
         }
         if (flag === true) {
@@ -83,10 +66,11 @@ function Login() {
           input['token'] = result;
           localStorage.setItem('token', JSON.stringify(input))
           navigate('/ViewData')
-          //  generate_token(32);
-           // localStorage.setItem('LoggedIn user', JSON.stringify(input))
          
         }
+        else{
+          alert("Please enter valid email and password")
+      }
     }
     //eslint-disable-next-line
 }, [formError])

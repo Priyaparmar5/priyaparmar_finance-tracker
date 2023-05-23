@@ -23,13 +23,14 @@ const Pagination = ({
     }
   };
 
+  
   for (let i = 1; i <= totalPages; i++) {
     pages.push(i);
   }
 
   return (
     <div className="pagination">
-      <a onClick={handlePrevClick} disabled={currentPage === 1}>
+      <a href="#" onClick={handlePrevClick} disabled={currentPage === 1}>
         Previous
       </a>
       {pages.map((page, index) => {

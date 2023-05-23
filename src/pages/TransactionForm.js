@@ -1,9 +1,8 @@
 import "../App.css";
 import { useState, useEffect, React } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
-import { useForm } from "react-hook-form";
+import { validateFiles, validateForms } from './validation';
 
-//import { FormField  } from "./FormFields/FormField";
 import {
   monthYearList,fromAccountList,toAccountList,transactionTypeList
 } from '../utils/constant';
@@ -11,11 +10,6 @@ import {
 function TransactionForm() {
 
   const [formError, setFormError] = useState({});
-
-  const {
-    register,
-    submitHandle
-  }=useForm();
 
   let date = new Date();
   let year = date.getFullYear();
@@ -31,18 +25,7 @@ function TransactionForm() {
     notes: "",
   };
 
-  // const FieldWrapper = ({ setValues, ...rest }) => (
-  //   <FormField
-  //     {...rest}
-  //     onChange={(value) => {
-  //       setValues((old) => ({ ...old, [rest.name]: value }));
-  //     }}
-  //   />
-  // );
-  // //let fileInput =React.createRef();
-
   const [formData, setFormData] = useState(initialValues);
-  const [isSubmit, setSubmit] = useState(false);
 
   const getBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -75,21 +58,20 @@ function TransactionForm() {
       console.debug("file store", base64);
       console.log("fiel", base64);
     });
-
-    const size = file.size; // it's in bytes
-    console.log(size);
-    if (size / 1024 > 1024) {
-      err.receipt = "File size should be less than  1 mb";
-
-      //return
+    if (file && validateFiles(file)) {
+      setFormData({ ...formData, receipt: file });
+      setFormError('')
     } else {
-      setFormData(() => ({
-        ...formData,
-        [event.target.name]: event.target.value,
-      }));
+      setFormData({ ...formData, receipt: null });
+      err.receipt='Invalid file. Please select a JPEG or JPG file with a maximum size of 1 MB.';
+
     }
+   
+
     setFormError({ ...err });
   };
+
+  
 
 
   const onChangeHandler = (event) => {
@@ -172,68 +154,11 @@ function TransactionForm() {
 
   const validateForm = (e) => {
     let err = {};
-    const MIN_FILE_SIZE = 1024;
-
-    // const fileExtension = formData.receipt.split(".").at(-1);
-    // const allowedFileTypes = ["jpg", "png", "jpeg"];
-    // if (!allowedFileTypes.includes(fileExtension)) {
-    //     //indow.alert(`File does not support. Files type must be ${allowedFileTypes.join(", ")}`);
-    //     return false;
-    //     err.receipt = "file does not support other extension";
-
-    // }
-
-    // const fileSizeKiloBytes = formData.receipt.size / 1024;
-    //console.log(formData.receipt.size, "sizeeeeee");
-    //console.log(fileSizeKiloBytes, "filesizekb..");
-
-    // if (formData.receipt.size > 1024) {
-    //   err.receipt = "size";
-    // }
-    
-
-    if (!formData.transactionDate) {
-          err.transactionDate = "Transaction date is required";
-    }
-
-    if (!formData.transactionType) {
-        err.transactionType = "Transaction type is required";
-    }    
-
-    if (formData.receipt === "") {
-      err.receipt = "receipt is required";
-    } else if (formData.receipt.size > MIN_FILE_SIZE) {
-      err.receipt = "File size should be less than  1 mb";
-    }
-
-    if (!formData.monthYear) {
-      err.monthYear = "please select anyone value";
-    }
-
-    if (!formData.fromAccount) {
-      err.fromAccount = "please select anyone value";
-    }
-
-    if (!formData.toAccount) {
-      err.toAccount = "please select anyone value";
-    } else if (formData.fromAccount === formData.toAccount) {
-      err.toAccount = "both values can't be same";
-    }
-
-    if (!formData.notes.trim()) {
-      err.notes = "notes is required";
-    }
-
-    if (!formData.amount.trim()) {
-      err.amount = "amount is required";
-    } else if (formData.amount < 0) {
-      err.amount = "amount should be greater than 0";
-    } else if (isNaN(formData.amount)) {
-      err.amount = "amount should be in digit ";
-    }
+   
     const data = { ...formData };
+    const errors = validateForms(formData);
 
-    if (Object.keys(err).length === 0) {
+    if (Object.keys(errors).length === 0) {
       console.log("hello");
       if (localStorage.getItem("key")) {
         const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
@@ -260,12 +185,10 @@ function TransactionForm() {
       }
       navigate("/viewData");
     }
-    if (Object.keys(err).length > 0) {
-      setFormError(err);
-    } else {
-      setFormError({});
+    else{
+      setFormError(errors);
     }
- //   setFormError( err );
+
     
   };
 
@@ -278,14 +201,17 @@ function TransactionForm() {
  
   const handleSubmit = (e) => {
     e.preventDefault();
-    
-    let isValid = validateForm();
-  
+    const isvalid = validateForm();
     const data = { ...formData };
     console.log(data, "datuuuu");
-    console.log(isValid,"isvaliddd")
- 
+    console.log(isvalid, "datuuuu");
+
   };
+
+  function clearFiles() {
+    const img = {...formData,receipt:null}
+    setFormData(img);
+  }
 
   useEffect(() => {
     for (const e in retrivedata) {
@@ -300,7 +226,6 @@ function TransactionForm() {
     <>
       <ul>
           <Link to="/ViewData" className="add-btn">ViewData</Link>
-        
       </ul>
       <form onSubmit={handleSubmit}>
         <div className="section">
@@ -419,7 +344,9 @@ function TransactionForm() {
               <span className="span1">{formError.amount}</span>
 
               <label htmlFor="receipt">Receipt </label>
+             
               <div>
+              {formData.receipt ? (
                   <>
                     <img
                       src={formData.receipt}
@@ -427,9 +354,14 @@ function TransactionForm() {
                       width={50}
                       alt=""
                     ></img>
-                   
+                   <input
+                    type="button"
+                    className="btn"
+                    value="X"
+                    onClick={clearFiles}
+                  />
                   </>
-               
+              ):(
                   <input
                     accept="image/jpg, image/png, image/jpeg"
                     type="file"
@@ -440,6 +372,7 @@ function TransactionForm() {
                     // value={formData.receipt}
                     onChange={handleImg}
                   />
+              )}
                 <span className="span1">{formError.receipt}</span>
               </div>
 

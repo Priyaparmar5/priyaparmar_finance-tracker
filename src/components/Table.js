@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
-import { Link, Outlet, json, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Pagination from "./Pagination";
 import Search from "./Search";
 
@@ -46,9 +46,9 @@ function Table(props) {
   console.log(lastIndex, "lrecords");
   console.log(firstIndex, "frecords");
 
-  const handleDelete = (outIndex) => {
-    const val = myLocalStorageData.filter((data, inIndex) => {
-      if (outIndex !== inIndex) {
+  const handleDelete = (id) => {
+    const val = myLocalStorageData.filter((data) => {
+      if (id !== data.id) {
         return data;
       }
     });
@@ -56,6 +56,10 @@ function Table(props) {
     localStorage.setItem("key", JSON.stringify(val));
     alert("Deleted successfully")
   };
+
+  useEffect(()=>{
+    setMyLocalStorageData(tabledData);
+  },[tabledData])
 
   // const sortingMonth = (col) => {
   //   if (col === "monthYear") {
@@ -193,7 +197,7 @@ function Table(props) {
                 </Link>
               </td>
               <td>
-                <button className="post" onClick={() => handleDelete(index)}>Delete</button>
+                <button className="post" onClick={() => handleDelete(item.id)}>Delete</button>
               </td>
             </tr>
           ))}

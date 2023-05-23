@@ -1,8 +1,7 @@
 import { useEffect } from "react";
-import {Outlet,Route,Routes, Navigate,useNavigate} from "react-router-dom";
+import {Route,Routes, Navigate,useNavigate} from "react-router-dom";
 import Login from '../pages/login/Login'
 import Registration from '../pages/register/Registration'
-import ViewData from '../components/ViewData'
 
 const Unauth =() =>{
     const navigate = useNavigate();

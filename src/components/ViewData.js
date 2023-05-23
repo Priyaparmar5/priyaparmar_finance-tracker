@@ -1,31 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "../App.css";
-import { Link, Outlet, json, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import Table from "./Table";
 
 function ViewData() {
 
   const navigate = useNavigate();
-  const [myLocalStorageData, setMyLocalStorageData] = useState([]);
   const [groupData, setGroupData] = useState([]);
-  const [currentPage, setCurrentPage] = useState(1);
-  const recordsPerPage = 3;
-  const lastIndex = currentPage * recordsPerPage;
-  const firstIndex = lastIndex - recordsPerPage;
-
-  const records = [...myLocalStorageData].slice(firstIndex, lastIndex);
-  //const groupData = [...groupData].slice(firstIndex, lastIndex);
-
-  const page = Math.ceil(myLocalStorageData.length / recordsPerPage);
-
 
   const handleLogout = (id) => {
     localStorage.removeItem("token");
 
     navigate("/public/login");
   };
-
 
   const localData = JSON.parse(localStorage.getItem("key"));
 
@@ -42,7 +30,6 @@ function ViewData() {
         console.log(result, "datataaaaa");
         resultdata[result] = resultdata[result] ?? [];
         resultdata[result].push(item);
-        //resultdata = item[val]
         console.log(resultdata[result], "resulttt");
       });
       setGroupData(resultdata);
@@ -51,7 +38,6 @@ function ViewData() {
     }
     console.log(resultdata, "resulttttt");
   };
-
 
   console.log(Object.keys(groupData).length);
   return (
