@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Login from './pages/login/Login';
 import AddTransaction from './pages/AddTransaction';
 import ViewData from './pages/ViewData';
+//import ViewDetail from './pages/ViewDetail';
 //import { useNavigate } from 'react-router-dom';
 
 
@@ -16,7 +17,9 @@ const App :React.FC =() =>{
     <Routes>
     <Route path="/" element={<Registration />} />    
     <Route path="/login" element={<Login />} />    
-    <Route path="/add" element={<AddTransaction />} />   
+    <Route path="/add" element={<AddTransaction />} /> 
+    <Route path="/add/:id" element={<AddTransaction />} />   
+    {/* <Route path="/view/:id" element={<ViewDetail />} />      */}
     <Route path="/ViewData" element={<ViewData />} />   
     </Routes>
     </BrowserRouter>

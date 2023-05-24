@@ -1,10 +1,14 @@
 import "../App.css";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { addTransaction } from "../redux/ducks/TransactionReducer";
+import {
+  addTransaction,
+  updateTransaction,
+  
+} from "../redux/ducks/TransactionReducer";
 
 import transactionState from "../redux/ducks/TransactionReducer";
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, Key } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
 //import { useGlobalContext } from "../context/TransactionContext";
@@ -24,11 +28,13 @@ const AddTransaction: React.FC = () => {
   const [formError, setFormError] = useState({});
 
   const dispatch = useDispatch();
-  const users = useSelector((state: RootState) => state.transactions.transaction);
+  const users = useSelector(
+    (state: RootState) => state.transactions.transaction
+  );
   console.log(users, "users");
 
   interface tFormInputs {
-   // id: number;
+     id: number;
     transactionDate: string;
     monthYear: string;
     transactionType: string;
@@ -122,7 +128,7 @@ const AddTransaction: React.FC = () => {
     setValue,
 
     formState: { errors },
-  } = useForm<tFormInputs>({
+  } = useForm<any>({
     mode: "onChange",
     resolver: yupResolver(schema),
     //defaultValues: initialValues,
@@ -178,9 +184,17 @@ const AddTransaction: React.FC = () => {
   //prefilled value
   useEffect(() => {
     // setFormData(users);
-    // Object.entries(formData).forEach(([key, value]) => {
-    //   setValue(key as keyof transactionState, value);
-    // });
+    // for (const e in retrivedata) {
+    //   if (parseInt(retrivedata[e].id) === parseInt(id)) {
+    //     setFormData(retrivedata[e]);
+    //     console.log(retrivedata[e], "retrieesfsd");
+    //     break;
+    //   }
+    // }
+  //  const valll = users.transaction.find(obj:any)=>obj.id !== id;
+    Object.entries(formData).forEach(([key, value]) => {
+      setValue(key, value);
+    });
     setImagePreview(formData.receipt);
   }, [formData, setValue]);
 
@@ -228,26 +242,26 @@ const AddTransaction: React.FC = () => {
     console.log("hello");
     if (users) {
       console.log("in usersss");
-      const retrivedata= users;
+      const retrivedata = users;
       //console.log(retrivedata[retrivedata.length],"ret.............");
-      
+
       console.log("id...", id);
       if (id) {
         console.log("in update");
 
-        // const dispatchData = dispatch(updateTransaction({ id: data.id, data }));
+        const dispatchData = dispatch(updateTransaction({ data, id: data.id }));
 
         // //setFormData(data);
         // console.log(formData, "formdataaa");
-        // console.log(dispatchData, "dispatchData");
+        console.log(dispatchData, "dispatchData");
         // console.log(id, "dataaaaaid");
         alert("update successfully");
       } else {
         console.log("in insert");
-       // const v = retrivedata.length:any;
-         const previd:any = retrivedata[retrivedata.length - 1].id;
-      
-          data["id"] = parseInt(previd) + 1;
+        // const v = retrivedata.length:any;
+        const previd: any = retrivedata[retrivedata.length - 1].id;
+
+        data["id"] = parseInt(previd) + 1;
         //    console.log(data["id"], "newid");
 
         console.log(data, "rsssss");
@@ -267,16 +281,12 @@ const AddTransaction: React.FC = () => {
 
   const retrivedata: any = users;
 
-  // useEffect(() => {
-  //   for (const e in retrivedata) {
-  //       if (parseInt(retrivedata[e].id) ===parseInt(id)) {
-  //       setFormData(retrivedata[e]);
-  //       console.log(retrivedata[e], "retrieesfsd");
-  //       break;
-  //     }
-  //   }
-  //   //setFormData(users);
-  // }, []);
+  useEffect(() => {
+    // const data = {...formData}
+    
+   
+    //  setFormData(users);
+  }, []);
   return (
     <>
       <ul>
@@ -300,7 +310,7 @@ const AddTransaction: React.FC = () => {
                 {...register("transactionDate")}
               />
 
-              <span className="span1">{errors.transactionDate?.message}</span>
+              {/* <span className="span1">{errors.transactionDate?.message}</span> */}
 
               <label>Month Year</label>
 
@@ -320,7 +330,7 @@ const AddTransaction: React.FC = () => {
                   </option>
                 ))}
               </select>
-              <span className="span1">{errors.monthYear?.message}</span>
+              {/* <span className="span1">{errors.monthYear?.message}</span> */}
 
               <label>Transaction Type</label>
               <select
@@ -339,7 +349,7 @@ const AddTransaction: React.FC = () => {
                 ))}
               </select>
 
-              <span className="span1">{errors.transactionType?.message}</span>
+              {/* <span className="span1">{errors.transactionType?.message}</span> */}
 
               <label>From Account</label>
               <select
@@ -358,7 +368,7 @@ const AddTransaction: React.FC = () => {
                 ))}
               </select>
 
-              <span className="span1">{errors.fromAccount?.message}</span>
+              {/* <span className="span1">{errors.fromAccount?.message}</span> */}
 
               <label>To Account</label>
 
@@ -380,7 +390,7 @@ const AddTransaction: React.FC = () => {
                 ))}
               </select>
 
-              <span className="span1">{errors.toAccount?.message}</span>
+              {/* <span className="span1">{errors.toAccount?.message}</span> */}
 
               <label htmlFor="amount">Amount </label>
               <input
@@ -389,7 +399,7 @@ const AddTransaction: React.FC = () => {
                 //   name="amount"
                 {...register("amount")}
               />
-              <span className="span1">{errors.amount?.message}</span>
+              {/* <span className="span1">{errors.amount?.message}</span> */}
 
               <label htmlFor="receipt">Receipt </label>
 
@@ -401,7 +411,7 @@ const AddTransaction: React.FC = () => {
                   )}
                   <input
                     type="button"
-                    className="btn"
+                    className="btn" 
                     value="X"
                     onClick={clearFiles}
                   />
@@ -417,7 +427,7 @@ const AddTransaction: React.FC = () => {
                 />
                 {/* )} */}
 
-                <span className="span1">{errors.receipt?.message}</span>
+                {/* <span className="span1">{errors.receipt?.message}</span> */}
               </div>
 
               <label htmlFor="notes">Notes </label>
@@ -427,7 +437,7 @@ const AddTransaction: React.FC = () => {
                 // maxLength="250"
                 {...register("notes")}
               />
-              <span className="span1">{errors.notes?.message}</span>
+              {/* <span className="span1">{errors.notes?.message}</span> */}
 
               <div className="bottom">
                 <input className="input" type="submit" value="submit" />

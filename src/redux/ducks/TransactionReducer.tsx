@@ -25,26 +25,26 @@ const TransactionReducer = createSlice({
       state.transaction.push(action.payload);
 
     },
-    // deleteTransaction(state, action) {
+    deleteTransaction(state, action) {
     
-    //   const val= state.value.filter(
-    //     (transaction) => transaction.id !== action.payload.id
-    //   );
-    //   state.value = val;
-    // console.log(action,"stateee");
-    // },
-    // updateTransaction(state, action) {
+      const val= state.transaction.filter(
+        (transaction) => transaction.id !== action.payload.id
+      );
+      state.transaction = val;
+    console.log(action,"stateee");
+    },
+    updateTransaction(state, action:PayloadAction<any>) {
        
-    //     const val= state.value.map((item)=>item.id  === action.payload.id 
-    //     ? action.payload.data : item)
-    //     console.log(val,"valllll");
-    //     state.value = val;
+        const val= state.transaction.map((item)=>item.id  === action.payload.id 
+        ? action.payload.data : item)
+        console.log(val,"valllll");
+        state.transaction = val;
        
-    // },
+    },
   },
 });
 
-export const { addTransaction } =
+export const { addTransaction , updateTransaction, deleteTransaction} =
   TransactionReducer.actions;
 
 export default TransactionReducer.reducer;

@@ -7,12 +7,19 @@ import 'react-toastify/dist/ReactToastify.css';
 import Pagination from "../components/Pagination";
 import Search from "../components/Search";
 import { RootState } from "../redux/rootReducer";
-//import { deleteTransaction } from "../redux/ducks/TransactionReducer";
+import { deleteTransaction } from "../redux/ducks/TransactionReducer";
 //import { useGlobalContext } from "../context/TransactionContext";
 
-function Table(props:any) {
-  const tabledData:any = props.tableRecords;
-//  const handleDelete = props.handleDelete;
+interface propsName {
+ // props :any;
+ // tabledData : any;
+  tableRecords : any;
+}
+
+const Table: React.FC<propsName> = ({tableRecords})=> {
+  
+  const tabledData = tableRecords;
+ // const handleDelete = props.handleDelete;
   const dispatch = useDispatch();
   const users = useSelector((state:RootState) => state.transactions);
   //const { transactionData, setTransactionData } = useGlobalContext(tabledData);
@@ -47,6 +54,8 @@ function Table(props:any) {
   //const numbers = [...Array(page + 1).keys()].slice(1);
 
   const [order, setOrder] = useState("ASC");
+  
+ 
 
   let date = new Date();
   let year = date.getFullYear();
@@ -80,13 +89,13 @@ useEffect(()=>{
 },[tabledData])
 
  
-//   const handleDelete = (id) => {
-//       console.log(id,"idddd");
-//       const dlt = dispatch(deleteTransaction({id}))
-//       console.log(dlt,"dltttt");
-//    // setMyLocalStorageData(dlt)
+  const handleDelete = (id:any) => {
+      console.log(id,"idddd");
+      const dlt = dispatch(deleteTransaction({id}))
+      console.log(dlt,"dltttt");
+   // setMyLocalStorageData(dlt)
    
-// };
+};
 
   const sorting = (col:any) => {
     setCurrentPage(1);
@@ -189,9 +198,9 @@ useEffect(()=>{
                 </Link>
               </td>
              
-              {/* <td onClick={showToastMessage}>
+              <td>
                 <button className="post" onClick={() => handleDelete(item.id)}>delete</button>
-              </td> */}
+              </td>
             </tr>
           ))}
         </table>

@@ -6,7 +6,7 @@ import { Cookies, useCookies } from 'react-cookie';
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/rootReducer";
 
-function ViewData() {
+const ViewData: React.FC =()=> {
   const navigate = useNavigate();
   const [myLocalStorageData, setMyLocalStorageData] = useState([]);
   const [groupData, setGroupData] = useState([]);
@@ -208,7 +208,7 @@ function ViewData() {
 
             {groupData.length === 0 ? (
               <>
-                <Table tableRecords={localData}   />
+                <Table tableRecords={localData}  />
                 <br></br>
               </>
             ) : (
