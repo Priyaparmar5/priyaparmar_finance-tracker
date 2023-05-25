@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addTransaction,
   updateTransaction,
-  
 } from "../redux/ducks/TransactionReducer";
 
 import transactionState from "../redux/ducks/TransactionReducer";
@@ -34,17 +33,18 @@ const AddTransaction: React.FC = () => {
   console.log(users, "users");
 
   interface tFormInputs {
-     id: number;
+    id: number;
     transactionDate: string;
     monthYear: string;
     transactionType: string;
     fromAccount: string;
     toAccount: string;
-    amount: string;
+    amount: number;
     receipt: string;
     notes: string;
   }
   const initialValues = {
+    // id:"",
     transactionDate: "",
     monthYear: "",
     transactionType: "",
@@ -55,13 +55,13 @@ const AddTransaction: React.FC = () => {
     notes: "",
   };
 
-  const [formData, setFormData] = useState(initialValues);
+  const [formData, setFormData] = useState<any>(initialValues);
   const [imageUrl, setImageUrl] = useState("");
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const schema = yup.object().shape({
     transactionDate: yup.string().required("transactionDate is required"),
-    monthYear: yup.string().required("Please select a product"),
+    monthYear: yup.string().required("month year is required"),
     //  monthYear : yup.string().required("monthYear is required"),
     //   monthYear:yup.array().required("Please select an hobby"),
     transactionType: yup.string().required("Transaction type is required"),
@@ -128,7 +128,7 @@ const AddTransaction: React.FC = () => {
     setValue,
 
     formState: { errors },
-  } = useForm<any>({
+  } = useForm<tFormInputs>({
     mode: "onChange",
     resolver: yupResolver(schema),
     //defaultValues: initialValues,
@@ -172,30 +172,24 @@ const AddTransaction: React.FC = () => {
     setFormData(img);
   }
 
-  const onChangeHandler = (e: any) => {
-    const { name, value } = e.target;
-    console.log(e.target, "heyy");
-    setFormData((previousValues) => ({
-      ...previousValues,
-      [name]: value,
-    }));
-  };
+  // const onChangeHandler = (e: any) => {
+  //   const { name, value } = e.target;
+  //   console.log(e.target, "heyy");
+  //   setFormData((previousValues) => ({
+  //     ...previousValues,
+  //     [name]: value,
+  //   }));
+  // };
 
   //prefilled value
   useEffect(() => {
+    // const retrivedata:any = users;
     // setFormData(users);
-    // for (const e in retrivedata) {
-    //   if (parseInt(retrivedata[e].id) === parseInt(id)) {
-    //     setFormData(retrivedata[e]);
-    //     console.log(retrivedata[e], "retrieesfsd");
-    //     break;
-    //   }
-    // }
-  //  const valll = users.transaction.find(obj:any)=>obj.id !== id;
-    Object.entries(formData).forEach(([key, value]) => {
-      setValue(key, value);
-    });
-    setImagePreview(formData.receipt);
+    //const valll = users.transaction.find(obj:any)=>obj.id !== id;
+    // Object.entries(formData).forEach(([key, value]) => {
+    //   setValue(key as keyof initialValue, value as keyof initialValue);
+    // });
+    // setImagePreview(formData.receipt);
   }, [formData, setValue]);
 
   const navigate = useNavigate();
@@ -203,7 +197,7 @@ const AddTransaction: React.FC = () => {
   console.log(formData.transactionDate, "formdddddddddd");
 
   const { id } = useParams();
-  console.log({ id }, "param");
+  console.log(id, "param");
 
   // const users = useSelector((state:RootState) => state.transactions);
 
@@ -212,21 +206,99 @@ const AddTransaction: React.FC = () => {
   // const previd = users[users.length - 1].id;
   // console.log(previd,"previdddssss");
 
-  const onSubmit = async (e: any) => {
+  // const onSubmit = async (e: any) => {
+  //   const isImg64 = typeof e.receipt === "string";
+
+  //   if (!isImg64) {
+  //     const img = await getBase64(e.receipt[0]);
+  //     console.log(img, "imggggg");
+  //     e.receipt = img;
+  //   }
+
+  //   const value = { ...e };
+
+  //   console.log(value, "eeeee");
+  //   const data:any = {
+  //     ...formData,
+  //     //id:value.id,
+  //     transactionDate: value.transactionDate,
+  //     monthYear: value.monthYear,
+  //     transactionType: value.transactionType,
+  //     fromAccount: value.fromAccount,
+  //     toAccount: value.toAccount,
+  //     amount: value.amount,
+  //     receipt: value.receipt,
+  //     notes: value.notes,
+  //   };
+  //   //setFormData(data);
+  //   console.log(data, "datuuuu");
+  //   console.log(data.id, "data.id");
+  //   console.log("hello");
+  //   if (users) {
+  //     console.log("in usersss");
+  //     const retrivedata = users;
+  //     //console.log(retrivedata[retrivedata.length],"ret.............");
+
+  //     console.log("id...", id);
+  //     if (id) {
+  //       console.log("in update");
+  //       console.log("id in update...", id);
+  //       const dispatchData = dispatch(updateTransaction({ data, id:data.id }));
+
+  //       // //setFormData(data);
+  //        console.log(formData, "formdataaa");
+  //       console.log(dispatchData, "dispatchData");
+  //     //  console.log(data.id, "dataaaaaid");
+  //       alert("update successfully");
+  //     } else {
+  //       console.log("in insert");
+  //       const previd:any = retrivedata[retrivedata.length - 1].id;
+  //       console.log(previd, "previd");
+  //       data.id = parseInt(previd) + 1;
+  //       console.log(data.id, "newid");
+  //       // retrivedata = data;
+  //       // retrivedata.push(data);
+  //       console.log(data, "rsssss");
+  //       const dis = dispatch(addTransaction(data));
+  //       console.log(dis,"disss");
+
+  //       setFormData(data.id);
+  //       setFormData(data);
+  //       console.log(retrivedata, "data");
+  //       alert("insert successfully");
+  //     }
+  //   }
+  //   // else {
+  //   //   data["id"] = 1;
+  //   //   dispatch(addTransaction([data]));
+  //   // }
+  //   navigate("/ViewData");
+  //   console.log("transactionnn", dispatch(addTransaction));
+  // };
+
+  const onSubmit = async (e: initialValue) => {
+    // e.preventDefault();
+    // dispatch(
+    //   addTransaction({ id: users[users.length - 1].id + 1, initialValues })
+    // );
+    // const value = { ...e };
+
     const isImg64 = typeof e.receipt === "string";
 
     if (!isImg64) {
       const img = await getBase64(e.receipt[0]);
       console.log(img, "imggggg");
-      e.receipt = img;
+      // e.receipt = img;
     }
-
+    // const img = await getBase64(e.receipt[0]);
+    // console.log(img, "imggggg");
+    // e.receipt = img;
     const value = { ...e };
 
     console.log(value, "eeeee");
     const data = {
       ...formData,
-      id: value.id,
+      //id:"",
       transactionDate: value.transactionDate,
       monthYear: value.monthYear,
       transactionType: value.transactionType,
@@ -237,56 +309,82 @@ const AddTransaction: React.FC = () => {
       notes: value.notes,
     };
     //setFormData(data);
+    console.log(data.id, "DATA.IDDDD");
+
     console.log(data, "datuuuu");
 
     console.log("hello");
     if (users) {
       console.log("in usersss");
       const retrivedata = users;
-      //console.log(retrivedata[retrivedata.length],"ret.............");
-
       console.log("id...", id);
       if (id) {
         console.log("in update");
+        // for (const e in retrivedata) {
+        //   if (parseInt(retrivedata[e].id) === parseInt(id)) {
+        //     data["id"] = id;
+        //     retrivedata[e] = data;
+        //   }
+        //
+        // }
+        const dispatchData = dispatch(updateTransaction({ id: data.id, data }));
 
-        const dispatchData = dispatch(updateTransaction({ data, id: data.id }));
-
-        // //setFormData(data);
-        // console.log(formData, "formdataaa");
+        //setFormData(data);
+        console.log(formData, "formdataaa");
         console.log(dispatchData, "dispatchData");
-        // console.log(id, "dataaaaaid");
+        console.log(data.id, "dataaaaaid");
         alert("update successfully");
       } else {
         console.log("in insert");
-        // const v = retrivedata.length:any;
         const previd: any = retrivedata[retrivedata.length - 1].id;
-
-        data["id"] = parseInt(previd) + 1;
-        //    console.log(data["id"], "newid");
-
+        console.log(previd, "previd");
+        data.id = previd + 1;
+        console.log(data.id, "newid");
+        // retrivedata = data;
+        // retrivedata.push(data);
         console.log(data, "rsssss");
-        dispatch(addTransaction(data));
+        const dis = dispatch(addTransaction(data));
+        console.log(dis, "disssss");
         setFormData(data);
+        //setFormData(data.id);
         console.log(retrivedata, "data");
         alert("insert successfully");
       }
+
+      //localStorage.setItem("key", JSON.stringify(retrivedata));
     }
     // else {
     //   data["id"] = 1;
+    //   // localStorage.setItem("key", JSON.stringify([data]));
     //   dispatch(addTransaction([data]));
     // }
     navigate("/ViewData");
     console.log("transactionnn", dispatch(addTransaction));
   };
 
-  const retrivedata: any = users;
+  // useEffect(() => {
+  //   if (users) {
+  //     const transactionData:any = users.find((obj:any) => obj.id === id);
+  //     console.log("useEffect..",transactionData);
 
+  //     if (transactionData) {
+  //      setFormData(transactionData);
+  //     }
+  //   }
+  // }, [users, id]);
+
+  const retrivedata: any = users;
   useEffect(() => {
-    // const data = {...formData}
-    
-   
-    //  setFormData(users);
-  }, []);
+    for (const e in retrivedata) {
+      if (retrivedata[e].id === id) {
+        console.log(retrivedata[e].id);
+
+        setFormData(retrivedata[e]);
+        console.log(retrivedata[e], "retrieesfsd");
+        break;
+      }
+    }
+  }, [formData]);
   return (
     <>
       <ul>
@@ -349,7 +447,7 @@ const AddTransaction: React.FC = () => {
                 ))}
               </select>
 
-              {/* <span className="span1">{errors.transactionType?.message}</span> */}
+              <span className="span1">{errors.transactionType?.message}</span>
 
               <label>From Account</label>
               <select
@@ -368,7 +466,7 @@ const AddTransaction: React.FC = () => {
                 ))}
               </select>
 
-              {/* <span className="span1">{errors.fromAccount?.message}</span> */}
+              <span className="span1">{errors.fromAccount?.message}</span>
 
               <label>To Account</label>
 
@@ -390,7 +488,7 @@ const AddTransaction: React.FC = () => {
                 ))}
               </select>
 
-              {/* <span className="span1">{errors.toAccount?.message}</span> */}
+              <span className="span1">{errors.toAccount?.message}</span>
 
               <label htmlFor="amount">Amount </label>
               <input
@@ -399,7 +497,7 @@ const AddTransaction: React.FC = () => {
                 //   name="amount"
                 {...register("amount")}
               />
-              {/* <span className="span1">{errors.amount?.message}</span> */}
+              <span className="span1">{errors.amount?.message}</span>
 
               <label htmlFor="receipt">Receipt </label>
 
@@ -411,7 +509,7 @@ const AddTransaction: React.FC = () => {
                   )}
                   <input
                     type="button"
-                    className="btn" 
+                    className="btn"
                     value="X"
                     onClick={clearFiles}
                   />
@@ -427,7 +525,7 @@ const AddTransaction: React.FC = () => {
                 />
                 {/* )} */}
 
-                {/* <span className="span1">{errors.receipt?.message}</span> */}
+                <span className="span1">{errors.receipt?.message}</span>
               </div>
 
               <label htmlFor="notes">Notes </label>
@@ -437,7 +535,7 @@ const AddTransaction: React.FC = () => {
                 // maxLength="250"
                 {...register("notes")}
               />
-              {/* <span className="span1">{errors.notes?.message}</span> */}
+              <span className="span1">{errors.notes?.message}</span>
 
               <div className="bottom">
                 <input className="input" type="submit" value="submit" />

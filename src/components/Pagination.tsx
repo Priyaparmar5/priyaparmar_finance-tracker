@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-const Pagination = ({
+interface propsname{
+  totalposts:any,
+  postPerPage:any,
+  currentPage:any,
+  setCurrentPage:any,
+}
+
+const Pagination:React.FC<propsname> = ({
   totalposts,
   postPerPage,
   currentPage,
@@ -26,10 +33,12 @@ const Pagination = ({
   for (let i = 1; i <= totalPages; i++) {
     pages.push(i);
   }
+//disabled={currentPage === 1}
+// disabled={currentPage === pages.length}
 
   return (
     <div className="pagination">
-      <a onClick={handlePrevClick} disabled={currentPage === 1}>
+      <a onClick={handlePrevClick} >
         Previous
       </a>
       {pages.map((page, index) => {
@@ -44,7 +53,7 @@ const Pagination = ({
           </a>
         );
       })}
-      <a onClick={handleNextClick} disabled={currentPage === pages.length}>
+      <a onClick={handleNextClick}>
         Next
       </a>
     </div>

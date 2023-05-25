@@ -5,6 +5,7 @@ import Table from "./Table";
 import { Cookies, useCookies } from 'react-cookie';
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/rootReducer";
+import { groupBySelect } from "../utils/constant";
 
 const ViewData: React.FC =()=> {
   const navigate = useNavigate();
@@ -172,10 +173,27 @@ const ViewData: React.FC =()=> {
 
   console.log(Object.keys(groupData).length);
 
-  // useEffect(() => {
-    
-  // setGroupData(transactionData);
-  // }, [transactionData]);
+  useEffect(() => {
+    if (grpVal) {
+      const resultdata:any = {};
+      const arr = [...localData];
+      arr.forEach((item) => {
+        const result = item[grpVal];
+        console.log(result, "grpatataaaaa");
+      
+        resultdata[result] = resultdata[result] ?? [];
+        resultdata[result].push(item);
+        //resultdata = item[val]
+        console.log(resultdata[result], "grpresulttt");
+        //setGroupData(resultdata);
+
+      });
+      setGroupData(resultdata);
+    }
+  //setGroupData(transactionData);
+  }, [transactionData,grpVal]);
+
+  
 
   return (
     <>
@@ -195,14 +213,13 @@ const ViewData: React.FC =()=> {
             </Link>
             <select
               name="selectData"
-              onChange={handleGroupChange}
+              onChange={e => setGrpVal(e.target.value)}
+             // onChange={handleGroupChange}
               className="input-select"
             >
-              <option value={""}>None </option>
-              <option value={"monthYear"}>Month Year </option>
-              <option value={"transactionType"}>Transaction Type </option>
-              <option value={"fromAccount"}>From Account </option>
-              <option value={"toAccount"}>To Account </option>
+            {groupBySelect.map(item => <option value={item.value} key={item.value}>{item.label}</option>)}
+
+             
             </select>
             {/* <Outlet /> */}
 

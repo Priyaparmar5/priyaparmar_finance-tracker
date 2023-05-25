@@ -7,4 +7,4 @@ export const rootReducer = combineReducers({
     transactions : TransactionReducer,
   });
   
-  export type RootState = ReturnType<typeof rootReducer>;
+ export type RootState = ReturnType<typeof rootReducer>;

@@ -5,7 +5,7 @@ export interface initialValue{
   transactionType: string,
   fromAccount: string,
   toAccount: string,
-  amount: string,
+  amount: number,
   receipt: string,
   notes: string,
 }
