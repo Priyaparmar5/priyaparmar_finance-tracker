@@ -6,6 +6,7 @@ import ViewData from "../pages/ViewData";
 import AddTransaction from "../pages/AddTransaction";
 import Table from "../pages/Table";
 import { Cookies } from "react-cookie";
+import ViewDetail from "../pages/ViewDetail";
 
 const ProtectedRoutes = () => {
   const navigate = useNavigate();
@@ -22,8 +23,7 @@ const ProtectedRoutes = () => {
       {authToken && (
         <Routes>
           <Route path="/ViewData" element={<ViewData />}></Route>
-          {/* <Route path="/table" element={<Table />}></Route> */}
-          {/* <Route path="/view/:id" element={<ViewDetail />}></Route> */}
+          <Route path="/view/:id" element={<ViewDetail />}></Route>
           <Route path="/add" element={<AddTransaction />}></Route>
           <Route path="/add/:id" element={<AddTransaction />}></Route>
           

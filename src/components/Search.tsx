@@ -24,13 +24,13 @@ const  Search:React.FC<propName> = ({myLocalStorageData,setMyLocalStorageData,ta
     }
 
   
-    const handlesearch = (event:any) => {
+    const handlesearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         const getSearch = event.target.value;
         if (getSearch.length > 0) {
           const searchdata = myLocalStorageData.filter((item:any) =>
             item.notes.toLowerCase().includes(getSearch) ||  item.transactionDate.includes(getSearch)||
             item.transactionType.toLowerCase().includes(getSearch) ||  item.fromAccount.toLowerCase().includes(getSearch) ||
-            item.toAccount.toLowerCase().includes(getSearch)|| item.monthYear.toLowerCase().includes(getSearch) ||  item.amount.includes(getSearch) 
+            item.toAccount.toLowerCase().includes(getSearch)|| item.monthYear.toLowerCase().includes(getSearch) ||  item.amount.toString().includes(getSearch) 
           );
           setMyLocalStorageData(searchdata);
           onPageChange(1,searchdata);

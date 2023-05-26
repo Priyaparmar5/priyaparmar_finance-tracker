@@ -31,6 +31,11 @@ const ViewData: React.FC =()=> {
     navigate("/public/login");
   };
 
+  // const handleLogout = () => {
+  //   // Perform any additional cleanup or API calls before logging out, if needed
+  //   dispatch(logout()); // Dispatch the logout action
+  // };
+
 //   useEffect(() => {
 //     handleGroupChange(grpVal)
 // }, []);
@@ -132,44 +137,6 @@ const ViewData: React.FC =()=> {
 
   const localData:any = transactionData;
   
-  const handleGroupChange = (e:any) => {
-    const resultdata:any = {};
-   // const val = e.target.value;
-    console.log(e.target.value, "grpval");
-    const arr = [...localData];
-    console.log(arr, "grparrrr");
-
-    if(e.target){
-    setGrpVal(e.target.value);
-    if (e.target.value) {
-      arr.forEach((item) => {
-        const result = item[e.target.value];
-        console.log(result, "grpatataaaaa");
-        resultdata[result] = resultdata[result] ?? [];
-        resultdata[result].push(item);
-        //resultdata = item[val]
-        console.log(resultdata[result], "grpresulttt");
-      });
-      setGroupData(resultdata);
-    } else {
-      setGroupData([]);
-    }
-  }
-  else{
-    if(e){
-      arr.forEach((item) => {
-        const result = item[e];
-        console.log(result, "grpatataaaaa");
-        resultdata[result] = resultdata[result] ?? [];
-        resultdata[result].push(item);
-        //resultdata = item[val]
-        console.log(resultdata[result], "grpresulttt");
-      });
-      setGroupData(resultdata);
-    }
-  }
-    console.log(resultdata, "grpresulttttt");
-  };
 
   console.log(Object.keys(groupData).length);
 
@@ -179,20 +146,14 @@ const ViewData: React.FC =()=> {
       const arr = [...localData];
       arr.forEach((item) => {
         const result = item[grpVal];
-        console.log(result, "grpatataaaaa");
-      
         resultdata[result] = resultdata[result] ?? [];
         resultdata[result].push(item);
-        //resultdata = item[val]
-        console.log(resultdata[result], "grpresulttt");
-        //setGroupData(resultdata);
-
       });
-      setGroupData(resultdata);
+      setGroupData(resultdata); 
+    } else {
+      setGroupData([]); 
     }
-  //setGroupData(transactionData);
-  }, [transactionData,grpVal]);
-
+  }, [localData, grpVal]);
   
 
   return (

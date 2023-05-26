@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import * as yup from "yup";
 import { registerTransaction } from "../../redux/ducks/UserReducer";
 import { RootState } from "../../redux/rootReducer";
-import { userDetail } from "../Transaction";
+import { userDetail } from "../../utils/Transaction";
 
 
  const Registration:React.FC= ()=> {
@@ -20,7 +20,7 @@ import { userDetail } from "../Transaction";
   };
 
   const dispatch = useDispatch();
-  const user = useSelector((state:RootState) => state.users);
+  const user = useSelector((state:RootState) => state.users.user);
   console.log(user, "usersaa");
   // const getForm = () => {
   //   const storedValues = localStorage.getItem("user");
@@ -47,15 +47,15 @@ import { userDetail } from "../Transaction";
     uname: yup.string().required("name is required"),
     email: yup
       .string()
-      .email()
-      .required("Email is required"),
-      // .test("email", "Email already exists", function (value) {
-      //   const storedData = user;
-      //   return (
-      //     storedData.filter((data) => data.email === value).length === 0 ||
-      //  .   !value
-      //   );
-      // }),
+      .email("Invalid Format")
+      .required("Email is required")
+      .test("unique-email", "Email already exists", function (value) {
+        const storedData:any = user;
+        return (
+          storedData.filter((data:any) => data.email === value).length === 0 ||
+          !value
+        );
+      }),
     password: yup.string().min(4).max(20).required("password is required"),
   });
 
@@ -71,12 +71,6 @@ import { userDetail } from "../Transaction";
     formState: { errors },
   } = useForm<LoginFormInputs>({ resolver: yupResolver(schema) });
 
-  //localStorage.setItem("user", JSON.stringify([values]));
-  useEffect(() => {
-    //  localStorage.setItem("user", JSON.stringify(values));
-  });
-
-  
 
  
   const onSubmit = (data: any) => {

@@ -3,59 +3,33 @@ import "../App.css";
 import { Link, Outlet, json, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 //import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import "react-toastify/dist/ReactToastify.css";
 import Pagination from "../components/Pagination";
 import Search from "../components/Search";
 import { RootState } from "../redux/rootReducer";
 import { deleteTransaction } from "../redux/ducks/TransactionReducer";
-//import { useGlobalContext } from "../context/TransactionContext";
 
 interface propsName {
- // props :any;
- // tabledData : any;
-  tableRecords : any;
+  tableRecords: any;
 }
 
-const Table: React.FC<propsName> = ({tableRecords})=> {
-  
+const Table: React.FC<propsName> = ({ tableRecords }) => {
   const tabledData = tableRecords;
- // const handleDelete = props.handleDelete;
   const dispatch = useDispatch();
-  const users = useSelector((state:RootState) => state.transactions);
-  //const { transactionData, setTransactionData } = useGlobalContext(tabledData);
-
-  const [state, setState] = useState({
-    transactionDate: "",
-    monthYear: "",
-    transactionType: "",
-    fromAccount: "",
-    toAccount: "",
-    amount: "",
-    receipt: "",
-    notes: "",
-  });
-
-  const navigate = useNavigate();
+  const users = useSelector((state: RootState) => state.transactions);
 
   const [myLocalStorageData, setMyLocalStorageData] = useState(tabledData);
-  const [groupData, setGroupData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage, setPostPerPage] = useState(3);
   const recordsPerPage = 3;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  
+
   const myLocal = [...myLocalStorageData];
 
   const records = myLocal.slice(firstIndex, lastIndex);
-  //const groupData = [...groupData].slice(firstIndex, lastIndex);
-
-  const page = Math.ceil(myLocalStorageData.length / recordsPerPage);
-  //const numbers = [...Array(page + 1).keys()].slice(1);
 
   const [order, setOrder] = useState("ASC");
-  
- 
 
   let date = new Date();
   let year = date.getFullYear();
@@ -78,26 +52,23 @@ const Table: React.FC<propsName> = ({tableRecords})=> {
 
   console.log(records, "records");
 
-//   const showToastMessage = () => {
-//     toast.success('Deleted Successfully !', {
-//         position: toast.POSITION.TOP_CENTER
-//     });
-//   };
+  //   const showToastMessage = () => {
+  //     toast.success('Deleted Successfully !', {
+  //         position: toast.POSITION.TOP_CENTER
+  //     });
+  //   };
 
-useEffect(()=>{
-  setMyLocalStorageData(tabledData);
-},[tabledData])
+  useEffect(() => {
+    setMyLocalStorageData(tabledData);
+  }, [tabledData]);
 
- 
-  const handleDelete = (id:any) => {
-      console.log(id,"idddd");
-      const dlt = dispatch(deleteTransaction({id}))
-      console.log(dlt,"dltttt");
-   // setMyLocalStorageData(dlt)
-   
-};
+  const handleDelete = (id: any) => {
+    console.log(id, "idddd");
+    const dlt = dispatch(deleteTransaction({ id }));
+    console.log(dlt, "dltttt");
+  };
 
-  const sorting = (col:any) => {
+  const sorting = (col: any) => {
     setCurrentPage(1);
 
     if (col === "monthYear") {
@@ -116,6 +87,20 @@ useEffect(()=>{
         setOrder("ASC");
       }
       setMyLocalStorageData(datanew);
+    } else if (col === "amount") {
+      if (order === "ASC") {
+        const sorted = [...myLocalStorageData].sort((a, b) =>
+          a[col].toString() > b[col].toString() ? 1 : -1
+        );
+        setMyLocalStorageData(sorted);
+        setOrder("DSC");
+      } else if (order === "DSC") {
+        const sorted = [...myLocalStorageData].sort((a, b) =>
+          a[col].toString() < b[col].toString() ? 1 : -1
+        );
+        setMyLocalStorageData(sorted);
+        setOrder("ASC");
+      }
     } else if (order === "ASC") {
       const sorted = [...myLocalStorageData].sort((a, b) =>
         a[col].toLowerCase() > b[col].toLowerCase() ? 1 : -1
@@ -164,7 +149,6 @@ useEffect(()=>{
           {/* <ToastContainer /> */}
           {records.map((item, index) => (
             <tr key={index}>
-              {/* <td>{item.id}</td> */}
               <td>{item.transactionDate}</td>
               <td>{item.monthYear}</td>
               <td>{item.transactionType}</td>
@@ -194,12 +178,14 @@ useEffect(()=>{
               <td>
                 {" "}
                 <Link to={`/add/${item.id}`} className="post">
-                 Edit
+                  Edit
                 </Link>
               </td>
-             
+
               <td>
-                <button className="post" onClick={() => handleDelete(item.id)}>delete</button>
+                <button className="post" onClick={() => handleDelete(item.id)}>
+                  delete
+                </button>
               </td>
             </tr>
           ))}
@@ -216,6 +202,6 @@ useEffect(()=>{
       </div>
     </div>
   );
-}
+};
 
 export default Table;

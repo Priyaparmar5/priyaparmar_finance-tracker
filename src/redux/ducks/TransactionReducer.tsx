@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { staticValues } from "../../utils/constant";
-import { initialValue } from "../../pages/Transaction";
+import { initialValue } from "../../utils/Transaction";
 
 interface transactionState {
   transaction: initialValue[];
@@ -19,7 +19,7 @@ const TransactionReducer = createSlice({
       //  state.value.push(action.payload)
       state.transaction = val;
       console.log(action, "actionnnnn");
-      // state.transaction.push(action.payload);
+     
     },
     deleteTransaction(state, action) {
       const val = state.transaction.filter(

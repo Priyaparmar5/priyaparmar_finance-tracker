@@ -1,4 +1,4 @@
-import { initialValue, userDetail } from "../pages/Transaction"
+import { initialValue, userDetail } from "./Transaction"
 export const monthYearList = [
   { value: "Jan 2023", label: "Jan 2023" },
   { value: "Feb 2023", label: "Feb 2023" },
