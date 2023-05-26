@@ -7,38 +7,22 @@ import { useGlobalContext } from "../context/TransactionContext";
 
 function Table(props) {
   const tabledData = props.tableRecords;
-  const handleDelete = props.handleDelete;
-  //const tabledData = props.tableRecords;
 
   const { transactionData, setTransactionData } = useGlobalContext();
 
-  const [state, setState] = useState({
-    transactionDate: "",
-    monthYear: "",
-    transactionType: "",
-    fromAccount: "",
-    toAccount: "",
-    amount: "",
-    receipt: "",
-    notes: "",
-  });
 
-  const navigate = useNavigate();
+
 
   const [myLocalStorageData, setMyLocalStorageData] = useState(tabledData);
-  const [groupData, setGroupData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [postPerPage, setPostPerPage] = useState(3);
   const recordsPerPage = 3;
   const lastIndex = currentPage * recordsPerPage;
   const firstIndex = lastIndex - recordsPerPage;
-  const [grpVal,setGrpVal] = useState("");
 
   const records = [...myLocalStorageData].slice(firstIndex, lastIndex);
-  //const groupData = [...groupData].slice(firstIndex, lastIndex);
 
   const page = Math.ceil(myLocalStorageData.length / recordsPerPage);
-  const numbers = [...Array(page + 1).keys()].slice(1);
 
   const [order, setOrder] = useState("ASC");
 
@@ -59,39 +43,23 @@ function Table(props) {
     `Dec ${year}`,
   ];
 
-  const { id } = useParams();
 
   console.log(records, "records");
 
-
-  // const handleDelete = (outIndex) => {
-  //   console.log(transactionData,"ttttt");
-  //   console.log(outIndex,"tttttn");
-  //   let val = myLocalStorageData.filter((data, inIndex) => {
-  //     if (outIndex !== inIndex) {
-  //       console.log(outIndex, "out");
-  //       console.log(inIndex, "in");
-  //       console.log(data, "data");
-        
-  //       return data;  
-  //     }
-  //   });
-
-  //   setMyLocalStorageData(val);
-  //   console.log(val,"vallll");
-  //   //localStorage.setItem("key", JSON.stringify(val));
-  // };
+  useEffect(()=>{
+    setMyLocalStorageData(tabledData);
+  },[tabledData])
 
 
-//   const handleDelete = (id) => {
-//     // differ();
-//     console.log(id,">");
-//     const cloneDelete = [...myLocalStorageData];
-//     const deletedData = cloneDelete.filter((value) => parseInt(value.id) !== parseInt(id));
-//     console.log(deletedData, ">>>>>>>>");
-//     setMyLocalStorageData(deletedData);
-//     // setCurrentPage(1);
-// };
+  const handleDelete = (id) => {
+    // differ();
+    console.log(id,">");
+    const cloneDelete = [...transactionData];
+    const deletedData = cloneDelete.filter((value) => parseInt(value.id) !== parseInt(id));
+    console.log(deletedData, ">>>>>>>>");
+    setTransactionData(deletedData);
+    // setCurrentPage(1);
+};
 
   const sorting = (col) => {
     setCurrentPage(1);

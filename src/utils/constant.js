@@ -37,6 +37,15 @@ export const transactionTypeList = [
   { value: "Income", label: "Income" },
 ];
 
+export const groupBySelect = [
+  { value: "" ,label : "None"},
+  { value: "monthYear" ,label : "monthYear"} ,
+  { value: "transactionType" ,label : "transactionType"},
+  { value: "fromAccount" ,label : "fromAccount"},
+  { value: "toAccount" ,label : "toAccount"}
+ 
+];
+
 export const staticValues = [
   {
     id: 1,
@@ -90,7 +99,6 @@ export const staticValues = [
 export const staticData =[
   
 {name: "siya ", email: "siya12@gmail.com", password: "siya1"},
-
  
 {name: "priya", email: "priyaparmar5501@gmail.com", password: "priya"},
  

@@ -2,31 +2,14 @@ import React, { useState, useEffect } from "react";
 import "../assets/styles/common.css";
 import { useGlobalContext } from "../context/TransactionContext";
 
-import {
-  Link,
-  Outlet,
-  useNavigate,
-  useLocation,
-  useParams,
-} from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 function ViewDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
-  // const data = location.state;
   const [data, setdata] = useState([]);
   const { transactionData, setTransactionData } = useGlobalContext();
 
-  // useEffect(()=> {
-
-  //   const data =JSON.parse(localStorage.getItem('key'));
-  //   console.log(data,"dattaaaa");
-  //   setState(data)
-  //   setMyLocalStorageData(data)
-
-  // },[])
-  //const retrivedata = JSON.parse(localStorage.getItem("key"));
   const retrivedata = transactionData;
   useEffect(() => {
     for (const key in retrivedata) {
@@ -36,7 +19,6 @@ function ViewDetail() {
         break;
       }
     }
-
     //eslint-disable-next-line
   }, []);
   return (
