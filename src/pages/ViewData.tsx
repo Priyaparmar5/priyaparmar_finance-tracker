@@ -9,7 +9,6 @@ import { groupBySelect } from "../utils/constant";
 
 const ViewData: React.FC =()=> {
   const navigate = useNavigate();
-  const [myLocalStorageData, setMyLocalStorageData] = useState([]);
   const [groupData, setGroupData] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [grpVal,setGrpVal] = useState("");
@@ -30,109 +29,6 @@ const ViewData: React.FC =()=> {
 
     navigate("/public/login");
   };
-
-  // const handleLogout = () => {
-  //   // Perform any additional cleanup or API calls before logging out, if needed
-  //   dispatch(logout()); // Dispatch the logout action
-  // };
-
-//   useEffect(() => {
-//     handleGroupChange(grpVal)
-// }, []);
-
-  
- const { id } = useParams();
-  
-  // const handleDelete = (id) => {
-  //   let updatedData = [];
-  //   if (id) {
-
-  //     console.log(id,">");
-
-  //     if (transactionData) {
-  //        const dlt=dispatch(deleteTransaction(id));
-  //        console.log(dlt,"dlttt");
-  //        //setMyLocalStorageData(dlt)
-  //     }
-  //     else {
-  //       console.log("in elseeeee");
-  //       const updatedgrpData ={}
-  //       Object.keys(groupData).forEach((groupCol) => {
-  //         updatedgrpData = updatedData.concat(
-  //           groupData[groupCol] = groupData[groupCol].filter((item) => item.id !== id)
-  //         )
-  //         console.log(updatedData,"grpupdata....");
-  //       });
-  //       // setMyLocalStorageData((prevGrpData) => {
-  //       //   const newGrpId = {};
-  //       //   Object.keys(prevGrpData).forEach((groupCol) => {
-  //       //     newGrpId[groupCol] = prevGrpData[groupCol].filter((item) => item.id !== id)
-  //       //   });
-  //       //   console.log("newgrpid",newGrpId);
-  //       //   return newGrpId;
-  //       // });
-  //       setGroupData(updatedData);
-     
-  //     }
-      
-  //   }
-  //   else {
-  //     console.log("in elsesssss");
-  //     updatedData = [...myLocalStorageData]
-  //   }
-  //   setMyLocalStorageData(updatedData)
-  // }
-
-  // const handleDelete = (id) => {
-  //   if(id){
-  //   dispatch(deleteTransaction(id));
-  //   }// Remove the transaction from the group data
-  // //   else{
-  // //   setGroupData((prevGroupData) => {
-  // //     const updatedGroupData = { ...prevGroupData };
-  // //     Object.keys(updatedGroupData).forEach((groupKey) => {
-  // //       updatedGroupData[groupKey] = updatedGroupData[groupKey].filter(
-  // //         (transaction) => transaction.id !== id
-  // //       );
-  // //     });
-  // //     return updatedGroupData;
-  // //   });
-  // //   setMyLocalStorageData((prevData) =>
-  // //   prevData.filter((transaction) => transaction.id !== id)
-  // // );
-  // //   }
-  // }
-
-  // // const handleDelete = (id) => {
-  // //   let updatedData = [];
-  // //   if (id) {
-  // //     if (transactionData) {
-  // //       const dlt= dispatch(deleteTransaction(id));
-  // //       console.log(dlt,"delete data");
-  // //     }
-  // //     else {
-  // //       console.log("in else grp");
-  // //       Object.keys(groupData).forEach((groupCol) => {
-  // //         updatedData = updatedData.concat(
-  // //           groupData[groupCol] = groupData[groupCol].filter((item) => item.id !== id)
-  // //         )
-  // //       });
-  // //       setGroupData((prevGrpData) => {
-  // //         const newGrpId = {};
-  // //         Object.keys(prevGrpData).forEach((groupCol) => {
-  // //           newGrpId[groupCol] = prevGrpData[groupCol].filter((item) => item.id !== id)
-  // //         });
-  // //         return newGrpId;
-  // //       });
-  // //       setGroupData(updatedData);
-  // //     }
-  // //   }
-  // //   else {
-  // //     updatedData = [...groupData]
-  // //   }
-  // //   setGroupData(updatedData)
-  // // }
-
 
 
   const localData:any = transactionData;
