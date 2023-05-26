@@ -16,26 +16,8 @@ function Registration() {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.users.value);
   console.log(user, "usersaa");
-  // const getForm = () => {
-  //   const storedValues = localStorage.getItem("user");
 
-  //   if (!storedValues)
-  //     return {
-  //       name: "",
-  //       email: "",
-  //       password:""
-  //     };
-  //     console.log("storedd",storedValues);
-  //   return JSON.parse([storedValues]);
-  // };
   const [input, setInput] = useState(initialValues);
-  const [values, setValues] = useState();
-  const [formError, setFormError] = useState({});
-
-  const handleInputChange = (event) => {
-    const { name, value } = event.target;
-    setInput({ ...input, [name]: value });
-  };
 
   const schema = yup.object().shape({
     name: yup.string().required("name is required"),
@@ -59,26 +41,6 @@ function Registration() {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  //localStorage.setItem("user", JSON.stringify([values]));
-  useEffect(() => {
-    //  localStorage.setItem("user", JSON.stringify(values));
-  });
-
-  const handleChange = (e) => {
-    setValues((previousValues) => ({
-      ...previousValues,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   const data = { ...input }
-
-  // }
-
   const onSubmit = (data) => {
     const value = { ...data };
     console.log(value, "vallllsss");
@@ -89,58 +51,13 @@ function Registration() {
       password: value.password,
     };
     console.log(storedData, "storeddd");
-    // val.push(storedData);
-    //   const reg =dispatch(registerTransaction(storedData));
-    // console.log(reg,"reggg");
-    //localStorage.setItem("user", JSON.stringify(val));
-    //    console.log(schema,"isvalidd");
 
     const val = dispatch(registerTransaction(storedData)) || [];
-    //   val.push(storedData);
+
     setInput(val);
-    //   localStorage.setItem("user", JSON.stringify(val));
-
-    // if (user) {
-    //   const retrivedata = user;
-
-    //   // console.log("in update");
-    //   // // for (const e in retrivedata) {
-    //   // //   if (parseInt(retrivedata[e].id) === parseInt(id)) {
-    //   // //     data["id"] = id;
-    //   // //     retrivedata[e] = data;
-    //   // //   }
-    //   // //
-    //   // // }
-    //   // const dispatchData= dispatch(updateTransaction({ id:data.id,value}));
-
-    //   // setFormData(dispatchData);
-    //   // console.log(dispatchData, "dispatchData");
-    //   // console.log(id, "dataaaaaid");
-    //   // alert("update successfully");
-
-    //   console.log("in insert");
-    //   const previd = retrivedata[retrivedata.length - 1].id;
-    //   console.log(previd, "previd");
-    //   storedData["id"] = parseInt(previd) + 1;
-    //   console.log(storedData["id"], "newid");
-    //   // retrivedata = data;
-    //   //retrivedata.push(storedData);
-    //  // console.log(user, "rsssss");
-    //   dispatch(registerTransaction(storedData));
-    //   setInput(storedData);
-    //   console.log(retrivedata, "data");
-    //   alert("insert successfully");
-    // }
-
-    //localStorage.setItem("key", JSON.stringify(retrivedata));
-
-    //    navigate("/ViewData");
-    //console.log("transactionnn", dispatch(addTransaction));
 
     navigate("/login");
-    //}
 
-    //localStorage.setItem("user", JSON.stringify(data));
     console.log(data, "dataa");
   };
 
@@ -161,8 +78,6 @@ function Registration() {
                   className="input"
                   name="name"
                   {...register("name")}
-                  //  value={input.name}
-                  // onChange={handleChange}
                 />
                 <p className="span1">{errors.name?.message}</p>
                 <label htmlFor="Email">Email</label>
@@ -171,8 +86,6 @@ function Registration() {
                   className="input"
                   {...register("email")}
                   name="email"
-                  //    value={input.email}
-                  //  onChange={handleChange}
                 />
                 <p className="span1">{errors.email?.message}</p>
                 <label htmlFor="password">password</label>
@@ -181,8 +94,6 @@ function Registration() {
                   className="input"
                   {...register("password")}
                   name="password"
-                  //   value={input.password}
-                  //   onChange={handleChange}
                 />
                 <p className="span1">{errors.password?.message}</p>
                 <div className="bottom">

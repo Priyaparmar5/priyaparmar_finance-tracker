@@ -37,6 +37,14 @@ export const transactionTypeList = [
   { value: "Income", label: "Income" },
 ];
 
+export const groupBySelect = [
+  { value: "" ,label : "None"},
+  { value: "monthYear" ,label : "monthYear"} ,
+  { value: "transactionType" ,label : "transactionType"},
+  { value: "fromAccount" ,label : "fromAccount"},
+  { value: "toAccount" ,label : "toAccount"}
+ 
+];
 
 export const staticValues = [
   {

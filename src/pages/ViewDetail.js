@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "../App.css";
 import { useSelector, useDispatch } from "react-redux";
-
 import {
-  Link,
-  Outlet,
   useNavigate,
   useLocation,
   useParams,
@@ -13,20 +10,10 @@ import {
 function ViewDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
-  // const data = location.state;
   const [data, setdata] = useState([]);
   const transactionData = useSelector((state) => state.transactions.value);
 
-  // useEffect(()=> {
-
-  //   const data =JSON.parse(localStorage.getItem('key'));
-  //   console.log(data,"dattaaaa");
-  //   setState(data)
-  //   setMyLocalStorageData(data)
-
-  // },[])
-  //const retrivedata = JSON.parse(localStorage.getItem("key"));
+ 
   const retrivedata = transactionData;
   useEffect(() => {
     for (const key in retrivedata) {

@@ -24,13 +24,7 @@ const TransactionReducer = createSlice({
       console.log(action, "actionnnnn");
     },
     deleteTransaction(state, action) {
-      // const { id } = action.payload;
-      // const uu = state.value.find((transaction) => transaction.id === id);
-      // if (uu) {
-      //   return state.value.filter((f) => f.id !== id);
-      // }
-     
-     // console.log(id,"iddddddss");
+    
       const val= state.value.filter(
         (transaction) => transaction.id !== action.payload.id
       );

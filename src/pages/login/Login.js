@@ -30,8 +30,8 @@ function Login() {
           storedData.filter((data) => data.email === value).length !== 0 ||
           !value
         );
-      })
-  ,  password: yup.string().min(4).max(20).required("password is required"),
+      }),
+    password: yup.string().min(4).max(20).required("password is required"),
   });
 
   const {
@@ -40,19 +40,6 @@ function Login() {
     formState: { errors },
   } = useForm({ resolver: yupResolver(schema) });
 
-  //   const generate_token=(length)=>{
-  //     //edit the token allowed characters
-  //     var a = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890".split("");
-  //     var b = [];
-  //     for (var i=0; i<length; i++) {
-  //         var j = (Math.random() * (a.length-1)).toFixed(0);
-  //         b[i] = a[j];
-  //     }
-  //     input['token'] = b.join("")
-
-  //     //return b.join("");
-
-  // }
   const handleChange = (e) => {
     setInput((previousValues) => ({
       ...previousValues,
@@ -60,46 +47,6 @@ function Login() {
     }));
   };
 
-  // const handleLogin = (e) =>{
-
-  //     e.preventDefault();
-  //   //  setFormError(loginValidation(input));
-  //     setIssubmit(true)
-
-  //   const loggeduser =JSON.parse(localStorage.getItem("user"));
-  //   console.log("loggeddd user",loggeduser);
-
-  // }
-
-  useEffect(() => {
-    // if (Object.keys(formError).length === 0 && issubmit) {
-    //     let flag = false
-    //     for (const key in loggeduser) {
-    //         if ((loggeduser[key].email === input.email) && (loggeduser[key].password === input.password)) {
-    //             flag = true
-    //             break;
-    //         }else{
-    //             alert("Please enter valid email and password")
-    //         }
-    //     }
-    //     if (flag === true) {
-    //       let result = '';
-    //       const str = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    //       const charLength = str.length;
-    //       let counter = 0;
-    //       while (counter < 33) {
-    //           result += str.charAt(Math.floor(Math.random() * charLength));
-    //           counter += 1;
-    //       }
-    //       input['token'] = result;
-    //       localStorage.setItem('token', JSON.stringify(input))
-    //       navigate('/ViewData')
-    //       //  generate_token(32);
-    //        // localStorage.setItem('LoggedIn user', JSON.stringify(input))
-    //     }
-    // }
-    //eslint-disable-next-line
-  }, [formError]);
   console.log(loggedusers, "loggeduserrrrr");
 
   const onSubmit = (data) => {
@@ -109,42 +56,39 @@ function Login() {
       password: data.password,
     };
     console.log(data.email, "data.email;;");
-    if(loggedusers){
-    let flag = false;
-    
-    for (const key in loggedusers) {
-      console.log( loggedusers[key].email,"loggggemailll");
-      console.log("in for loop", loggedusers);
-      if (
-        loggedusers[key].email === data.email &&
-        loggedusers[key].password === data.password
-      ) {
-        flag = true;
-        break;
-      } 
-    }
-    if (flag === true) {
-      let result = "";
-      const str =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-      const charLength = str.length;
-      let counter = 0;
-      while (counter < 33) {
-        result += str.charAt(Math.floor(Math.random() * charLength));
-        counter += 1;
-      }
-      const token = result;
-      setCookie("name", token, { maxAge: 3600 },{ path: "/" });
+    if (loggedusers) {
+      let flag = false;
 
-      // localStorage.setItem('token', JSON.stringify(input))
-      navigate("/ViewData");
-      //  generate_token(32);
-      // localStorage.setItem('LoggedIn user', JSON.stringify(input))
+      for (const key in loggedusers) {
+        console.log(loggedusers[key].email, "loggggemailll");
+        console.log("in for loop", loggedusers);
+        if (
+          loggedusers[key].email === data.email &&
+          loggedusers[key].password === data.password
+        ) {
+          flag = true;
+          break;
+        }
+      }
+      if (flag === true) {
+        let result = "";
+        const str =
+          "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+        const charLength = str.length;
+        let counter = 0;
+        while (counter < 33) {
+          result += str.charAt(Math.floor(Math.random() * charLength));
+          counter += 1;
+        }
+        const token = result;
+        setCookie("name", token, { maxAge: 3600 }, { path: "/" });
+
+        // localStorage.setItem('token', JSON.stringify(input))
+        navigate("/ViewData");
+      } else {
+        alert("Please enter valid email and password");
+      }
     }
-    else {
-      alert("Please enter valid email and password");
-    }
-  }
   };
 
   return (

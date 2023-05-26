@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 
 const Pagination = ({
   totalposts,
@@ -12,14 +12,12 @@ const Pagination = ({
   const handlePrevClick = () => {
     if (currentPage > 1) {
       setCurrentPage(currentPage - 1);
-      
     }
   };
 
   const handleNextClick = () => {
     if (currentPage < totalPages) {
       setCurrentPage(currentPage + 1);
-
     }
   };
 

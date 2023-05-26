@@ -4,29 +4,22 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addTransaction,
   updateTransaction,
-  deleteTransaction,
 } from "../redux/ducks/TransactionReducer";
-import { useState, useEffect, React, useContext } from "react";
+import { useState, useEffect, React } from "react";
 import { useNavigate, Link, useParams } from "react-router-dom";
 import { yupResolver } from "@hookform/resolvers/yup";
-//import { useGlobalContext } from "../context/TransactionContext";
 import * as yup from "yup";
-//import { FormField  } from "./FormFields/FormField";
 import {
   monthYearList,
   fromAccountList,
   toAccountList,
   transactionTypeList,
-  staticValues,
 } from "../utils/constant";
 
 function AddTransaction() {
-  const [formError, setFormError] = useState({});
-
   const dispatch = useDispatch();
   const users = useSelector((state) => state.transactions.value);
   console.log(users, "users");
-  const { transactionData, setTransactionData } = useState(users);
 
   const initialValues = {
     transactionDate: "",
@@ -40,14 +33,11 @@ function AddTransaction() {
   };
 
   const [formData, setFormData] = useState(initialValues);
-  const [imageUrl, setImageUrl] = useState("");
   const [imagePreview, setImagePreview] = useState(null);
 
   const schema = yup.object().shape({
     transactionDate: yup.string().required("transactionDate is required"),
-    monthYear: yup.string().required("Please select a product"),
-    //  monthYear : yup.string().required("monthYear is required"),
-    //   monthYear:yup.array().required("Please select an hobby"),
+    monthYear: yup.string().required("Please select a monthYear"),
     transactionType: yup.string().required("Transaction type is required"),
     fromAccount: yup
       .string()
@@ -71,13 +61,13 @@ function AddTransaction() {
     notes: yup.string().required("notes is required"),
     receipt: yup
       .mixed()
-      .test("required", "please select file", (value) => {
-        return value && value.length;
-      })
+      .required("select file")
+      // .test("required", "please select file", (value) => {
+      //   return value && value.length > 0;
+      // })
       .test("fileSize", "File size is too large", (value) => {
-        if (value && value[0].size <= 1048576) {
-          return true;
-        }
+        if (value && value[0] && value[0].size <= 1048576) return true; // Allow empty values
+        // return value.size <= 1048576;
 
         if (typeof value === "string" && value.startsWith("data:image")) {
           return true;
@@ -90,6 +80,7 @@ function AddTransaction() {
         (value) => {
           if (
             value &&
+            value[0] &&
             ["image/jpeg", "image/png", "image/gif"].includes(value[0].type)
           ) {
             return true;
@@ -104,9 +95,7 @@ function AddTransaction() {
 
   const {
     register,
-    trigger,
     handleSubmit,
-    watch,
     setValue,
     formState: { errors },
   } = useForm({
@@ -114,17 +103,6 @@ function AddTransaction() {
     resolver: yupResolver(schema),
     defaultValues: initialValues,
   });
-
-  const handleImageChange = (event) => {
-    const file = event.target.files[0];
-    setFormData(URL.createObjectURL(file));
-  };
-  let date = new Date();
-
-  let year = date.getFullYear();
-
-  //const [formData, setFormData] = useState(initialValues);
-  const [isSubmit, setSubmit] = useState(false);
 
   const getBase64 = (file) => {
     return new Promise((resolve, reject) => {
@@ -155,44 +133,6 @@ function AddTransaction() {
     setFormData(img);
   }
 
-  const handleImg = (event) => {
-    let err = {};
-
-    console.log(event, "eventt");
-    const file = event.target.files[0];
-
-    const data = new FileReader();
-    data.addEventListener("load", () => {
-      const val = { ...formData, receipt: data };
-      setFormData(val);
-    });
-    data.readAsDataURL(file);
-
-    getBase64(file).then((base64) => {
-      const val = { ...formData, receipt: base64 };
-      console.log("val", val);
-
-      setFormData(val);
-      // localStorage["receipt"] = base64;
-      console.debug("file store", base64);
-      console.log("fiel", base64);
-    });
-
-    const size = file.size; // it's in bytes
-    console.log(size);
-    if (size / 1024 > 1024) {
-      err.receipt = "File size should be less than  1 mb";
-
-      //return
-    } else {
-      setFormData(() => ({
-        ...formData,
-        [event.target.name]: event.target.value,
-      }));
-    }
-    setFormError({ ...err });
-  };
-
   const onChangeHandler = (e) => {
     const { name, value } = e.target;
     console.log(e.target, "heyy");
@@ -202,211 +142,23 @@ function AddTransaction() {
     }));
   };
 
-  //
-  // setFormData((prevFormData) => ({
-  //   ...prevFormData,
-  //   [name]: value
-  // }));
-  //
-  const onChangeHandler1 = (event) => {
-    const { name, value } = event.target;
-    //  setFormData({ ...formData, [name]: value });
-    let newErrors = { ...formError };
-
-    switch (name) {
-      case "transactionDate":
-        if (!value) {
-          newErrors[name] = "transactionDate is required";
-        } else {
-          delete newErrors[name];
-        }
-        break;
-      case "transactionType":
-        if (!value) {
-          newErrors[name] = "transactionType is required";
-        } else {
-          delete newErrors[name];
-        }
-        break;
-      case "monthYear":
-        if (!value) {
-          newErrors[name] = "Month year is required";
-        } else {
-          delete newErrors[name];
-        }
-        break;
-      case "fromAccount":
-        if (!value) {
-          newErrors[name] = "From account is required";
-        } else {
-          delete newErrors[name];
-        }
-        break;
-      case "toAccount":
-        if (!value) {
-          newErrors[name] = "to account is required";
-        } else {
-          delete newErrors[name];
-        }
-        break;
-      case "amount":
-        if (!value) {
-          newErrors[name] = "amount is required";
-        } else {
-          delete newErrors[name];
-        }
-        break;
-      case "reciept":
-        if (!value) {
-          newErrors[name] = "receipt is required";
-        } else {
-          delete newErrors[name];
-        }
-        break;
-      case "notes":
-        if (!value) {
-          newErrors[name] = "notes is required";
-        } else {
-          delete newErrors[name];
-        }
-        break;
-      default:
-        break;
-    }
-
-    setFormData((prevFormData) => ({
-      ...prevFormData,
-      [name]: value,
-    }));
-    setFormError(newErrors);
-  };
   //prefilled value
   useEffect(() => {
     // setFormData(users);
     Object.entries(formData).forEach(([key, value]) => {
-      // if (key === "receipt" && value) {
-      //   const fileName = value.split("/").pop();
-      //   setValue(key, null, { shouldDirty: true });
-      //   setValue(key, { value: fileName });
-      //   setValue("receipt", value.name);
-      //   console.log();
-      // } else {
-      //   setValue(key, value);
-      // }
-
       setValue(key, value);
     });
     setImagePreview(formData.receipt);
   }, [formData, setValue]);
 
-  //
-  // const handleSelectImage = (event) => {
-  //   const file = event.target.files[0];
-  //   const fileReader = new FileReader();
-  //   fileReader.addEventListener("load", () => {
-  //     setPreviewImage(fileReader.result);
-  //   });
-  //   fileReader.readAsDataURL(file);
-  // };
-
-  // const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
   const navigate = useNavigate();
 
-  const validateForm = (e) => {
-    let err = {};
-    const MIN_FILE_SIZE = 1024;
-
-    if (!formData.transactionDate) {
-      err.transactionDate = "Transaction date is required";
-    }
-
-    if (!formData.transactionType) {
-      err.transactionType = "Transaction type is required";
-    }
-
-    if (formData.receipt === "") {
-      err.receipt = "receipt is required";
-    } else if (formData.receipt.size > MIN_FILE_SIZE) {
-      err.receipt = "File size should be less than  1 mb";
-    }
-
-    if (!formData.monthYear) {
-      err.monthYear = "please select anyone value";
-    }
-
-    if (!formData.fromAccount) {
-      err.fromAccount = "please select anyone value";
-    }
-
-    if (!formData.toAccount) {
-      err.toAccount = "please select anyone value";
-    } else if (formData.fromAccount === formData.toAccount) {
-      err.toAccount = "both values can't be same";
-    }
-
-    if (!formData.notes.trim()) {
-      err.notes = "notes is required";
-    }
-
-    if (!formData.amount.trim()) {
-      err.amount = "amount is required";
-    } else if (formData.amount < 0) {
-      err.amount = "amount should be greater than 0";
-    } else if (isNaN(formData.amount)) {
-      err.amount = "amount should be in digit ";
-    }
-    const data = { ...formData };
-
-    // if (Object.keys(err).length === 0) {
-    //   console.log("hello");
-    //   if (transactionData) {
-    //     const retrivedata = transactionData || [];
-    //     console.log("id", id);
-    //     if (id) {
-    //       for (const e in retrivedata) {
-    //         if (parseInt(retrivedata[e].id) === parseInt(id)) {
-    //           data["id"] = id;
-    //           retrivedata[e] = data;
-    //         }
-    //       }
-    //       console.log(retrivedata, "data");
-    //       alert("update successfully");
-    //     } else {
-    //       const previd = retrivedata[retrivedata.length - 1].id;
-    //       data["id"] = parseInt(previd) + 1;
-    //       retrivedata.push(data);
-    //       alert("insert successfully");
-    //     }
-    //     // localStorage.setItem("key", JSON.stringify(retrivedata));
-    //     setTransactionData(retrivedata);
-    //   } else {
-    //     data["id"] = 1;
-    //     //  localStorage.setItem("key", JSON.stringify([data]));
-    //     setTransactionData([data]);
-    //   }
-    //   navigate("/viewData");
-    // }
-    if (Object.keys(err).length > 0) {
-      setFormError(err);
-    } else {
-      setFormError({});
-    }
-    //   setFormError( err );
-  };
-
   console.log(formData.transactionDate, "formdddddddddd");
-  //const fieldPropsCommon = { values, errors, setValues };
 
   const { id } = useParams();
   console.log({ id }, "param");
 
   const onSubmit = async (e) => {
-    // e.preventDefault();
-    // dispatch(
-    //   addTransaction({ id: users[users.length - 1].id + 1, initialValues })
-    // );
-    // const value = { ...e };
-
     const isImg64 = typeof e.receipt === "string";
 
     if (!isImg64) {
@@ -414,9 +166,7 @@ function AddTransaction() {
       console.log(img, "imggggg");
       e.receipt = img;
     }
-    // const img = await getBase64(e.receipt[0]);
-    // console.log(img, "imggggg");
-    // e.receipt = img;
+
     const value = { ...e };
 
     console.log(value, "eeeee");
@@ -441,13 +191,7 @@ function AddTransaction() {
       console.log("id...", id);
       if (id) {
         console.log("in update");
-        // for (const e in retrivedata) {
-        //   if (parseInt(retrivedata[e].id) === parseInt(id)) {
-        //     data["id"] = id;
-        //     retrivedata[e] = data;
-        //   }
-        //
-        // }
+
         const dispatchData = dispatch(updateTransaction({ id: data.id, data }));
 
         //setFormData(data);
@@ -461,26 +205,21 @@ function AddTransaction() {
         console.log(previd, "previd");
         data["id"] = parseInt(previd) + 1;
         console.log(data["id"], "newid");
-        // retrivedata = data;
-        // retrivedata.push(data);
+
         console.log(data, "rsssss");
         dispatch(addTransaction(data));
         setFormData(data);
         console.log(retrivedata, "data");
         alert("insert successfully");
       }
-
-      //localStorage.setItem("key", JSON.stringify(retrivedata));
     } else {
       data["id"] = 1;
-      // localStorage.setItem("key", JSON.stringify([data]));
       dispatch(addTransaction([data]));
     }
     navigate("/ViewData");
     console.log("transactionnn", dispatch(addTransaction));
   };
 
-  //const retrivedata = JSON.parse(localStorage.getItem("key")) || [];
   const retrivedata = users;
 
   useEffect(() => {
@@ -524,7 +263,6 @@ function AddTransaction() {
                 name="monthYear"
                 className="input"
                 {...register("monthYear")}
-                // onChange={(e) => doSomething(e.target.value)} // Using setValue
               >
                 <option value="" disabled>
                   Select Month Year
@@ -561,12 +299,7 @@ function AddTransaction() {
               <select
                 className="input"
                 name="fromAccount"
-                {...register(
-                  "fromAccount"
-                  //  name:"fromAccount",
-                  //    value:formData.fromAccount,
-                  //    onChange={onChangeHandler}
-                )}
+                {...register("fromAccount")}
               >
                 <option value="" disabled>
                   Select From Account
@@ -613,21 +346,21 @@ function AddTransaction() {
               <span className="span1">{errors.amount?.message}</span>
 
               <label htmlFor="receipt">Receipt </label>
-              <input
-                type="button"
-                className="btn"
-                value="X"
-                onClick={clearFiles}
-              />
+
               <div>
+                {/* {imagePreview  ? ( */}
                 <>
                   {imagePreview != null && (
                     <img src={imagePreview} height={60} width={50} alt="" />
                   )}
-                  {/* <img src={formData.receipt} height={60} width={50} alt="" /> */}
-                  {/* {imageUrl && <img src={formData.receipt} alt="Preview" width="200" />} */}
+                  <input
+                    type="button"
+                    className="btn"
+                    value="X"
+                    onClick={clearFiles}
+                  />
                 </>
-
+                {/* ) : ( */}
                 <input
                   accept="image/jpg, image/png, image/jpeg"
                   type="file"
@@ -635,21 +368,8 @@ function AddTransaction() {
                   name="receipt"
                   {...register("receipt")}
                   onChange={previewFile}
-
-                  // onChange={handleImg}
-                  //   value={formData.receipt}
                 />
-
-                {/* <input
-                  ref={filePicekerRef}
-                  accept="image/*, video/*"
-                  onChange={previewFile}
-                  type="file"
-                  hidden
-                />
-              
-                <button className="btn">x</button> */}
-                {/* <strong>{watch('receipt')[0].name}</strong> */}
+                {/* )} */}
 
                 <span className="span1">{errors.receipt?.message}</span>
               </div>

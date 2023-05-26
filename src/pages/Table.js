@@ -11,7 +11,7 @@ import { deleteTransaction } from "../redux/ducks/TransactionReducer";
 
 function Table(props) {
   const tabledData = props.tableRecords;
-  //const tabledData = props.tableRecords;
+//  const handleDelete = props.handleDelete;
   const dispatch = useDispatch();
   const users = useSelector((state) => state.transactions.value);
   //const { transactionData, setTransactionData } = useGlobalContext(tabledData);
@@ -72,25 +72,12 @@ function Table(props) {
     });
   };
 
-  // const handleDelete = (outIndex) => {
-  //   //console.log(transactionData,"ttttt");
-  //   console.log(outIndex,"tttttn");
-  //   let val = myLocalStorageData.filter((data, inIndex) => {
-  //     if (outIndex !== inIndex) {
-  //       console.log(outIndex, "out");
-  //       console.log(inIndex, "in");
-  //       console.log(data, "data");
-        
-  //       return data;  
-  //     }
-  //   });
+useEffect(()=>{
+  setMyLocalStorageData(tabledData);
+},[tabledData])
 
-  //   setMyLocalStorageData(val);
-  //   console.log(val,"vallll");
-  //   //localStorage.setItem("key", JSON.stringify(val));
-  // };
-
-    const handleDelete = (id) => {
+ 
+  const handleDelete = (id) => {
       console.log(id,"idddd");
       const dlt = dispatch(deleteTransaction({id}))
       console.log(dlt,"dltttt");
@@ -145,10 +132,6 @@ function Table(props) {
         lastIndex={lastIndex}
         firstIndex={firstIndex}
       />
-
-      {/* <button type="button" className="backbtn" onClick={() => navigate(-1)}>
-        Go back
-      </button> */}
 
       <div className="TableDesign">
         <table className="table">
